@@ -2,10 +2,8 @@ package awsstate
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/thomas.obenaus/terrastate/trace"
 )
 
@@ -22,14 +20,22 @@ type stateLoaderImpl struct {
 
 func (sl *stateLoaderImpl) Load() error {
 
-	ss3Ep := s3.New(sl.session)
-	buckets, err := ss3Ep.ListBuckets(nil)
+	_, err := sl.loadVpc()
 	if err != nil {
 		return err
 	}
 
-	log.Printf("Buckerts: %s", buckets)
+	return nil
+}
 
+func (sl *stateLoaderImpl) Validate() error {
+	if sl.session == nil {
+		return fmt.Errorf("Session is nil")
+	}
+
+	if sl.tracer == nil {
+		return fmt.Errorf("Tracer is nil")
+	}
 	return nil
 }
 
