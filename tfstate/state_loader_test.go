@@ -8,12 +8,12 @@ import (
 )
 
 func TestSMNew(t *testing.T) {
-	sm := NewStateManager()
+	sm := NewStateLoader()
 	require.NotNil(t, sm)
 }
 
 func TestSMLoad(t *testing.T) {
-	sm := NewStateManager()
+	sm := NewStateLoader()
 	require.NotNil(t, sm)
 
 	tfstate, err := sm.Load("ssss")
