@@ -1,7 +1,7 @@
 .DEFAULT_GOAL				:= all
 name 								:= "terrastate"
 
-all: build cover run
+all: vendor build cover run
 
 test:
 	@echo "----------------------------------------------------------------------------------"
@@ -16,7 +16,7 @@ cover:
 #-----------------
 #-- build
 #-----------------
-build: vendor
+build:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Build the $(name)"
 	@go build -o $(name) .
