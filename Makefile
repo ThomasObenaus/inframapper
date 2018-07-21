@@ -6,12 +6,12 @@ all: vendor build cover run
 test:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
-	@go test ./tfstate -v
+	@go test ./tfstate ./trace -v
 
 cover:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
-	@go test ./tfstate -cover
+	@go test ./tfstate ./trace -cover -v
 
 #-----------------
 #-- build
