@@ -7,3 +7,4 @@ vendor/
 file.plan
 terraform.tfstate
 terraform.tfstate.backup
+awsstate/debug\.test

@@ -28,15 +28,14 @@ func (sm *tfStateLoader) Load(filename string) (*terraform.State, error) {
 
 // NewStateLoader creates a new instance of a StateLoader without tracing
 func NewStateLoader() StateLoader {
-
-	return &tfStateLoader{
-		tracer: trace.Off(),
-	}
+	return NewStateLoaderWithTracer(nil)
 }
 
 // NewStateLoaderWithTracer creates a new instance of a StateLoader with tracing
 func NewStateLoaderWithTracer(tracer trace.Tracer) StateLoader {
-
+	if tracer == nil {
+		tracer = trace.Off()
+	}
 	return &tfStateLoader{
 		tracer: tracer,
 	}
