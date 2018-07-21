@@ -1,3 +1,9 @@
 terrastate
 Gopkg.lock
 vendor/
+
+## terraform stuff
+.terraform/
+file.plan
+terraform.tfstate
+terraform.tfstate.backup
