@@ -3,29 +3,22 @@ package main
 import (
 	"log"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/thomas.obenaus/terrastate/awsstate"
 )
 
 func main() {
-	log.Println("Hello world")
 
-	sess := session.Must(session.NewSession(&aws.Config{Region: aws.String("us-west-2"),
-		Credentials: credentials.NewSharedCredentials("", "playground")}))
+	profile := "shared"
+	region := "us-east-1"
 
-	//(&aws.Config{
-	//	Region:      aws.String("us-west-2"),
-	//	Credentials: credentials.NewSharedCredentials("", "test-account"),
-	//})
-
-	ss3Ep := s3.New(sess)
-	buckets, err := ss3Ep.ListBuckets(nil)
+	awsSl, err := awsstate.NewStateLoader(profile, region)
 	if err != nil {
-		log.Fatalf("Error: %s", err.Error())
+		log.Fatalf("Error creating StateLoader for AWS: %s", err.Error())
 	}
 
-	log.Printf("Buckerts: %s", buckets)
+	if err := awsSl.Load(); err != nil {
+		log.Fatalf("Error loading AWS state: %s", err.Error())
+
+	}
 
 }
