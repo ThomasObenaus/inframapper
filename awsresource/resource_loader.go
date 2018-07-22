@@ -9,7 +9,7 @@ import (
 
 type ResourceLoader interface {
 	Load() error
-	Validate() error
+	GetLoadedInfra() (Infra, error)
 }
 
 type resourceLoaderImpl struct {
@@ -29,6 +29,11 @@ func (sl *resourceLoaderImpl) Load() error {
 	return nil
 }
 
+func (sl *resourceLoaderImpl) GetLoadedInfra() (Infra, error) {
+	return nil, fmt.Errorf("N/A")
+}
+
+// Validate if the preconditions to load the infrastructure are met
 func (sl *resourceLoaderImpl) Validate() error {
 	if sl.session == nil {
 		return fmt.Errorf("Session is nil")
