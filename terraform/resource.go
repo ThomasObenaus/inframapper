@@ -1,13 +1,9 @@
 package terraform
 
-type Resource struct {
-	Id        string
-	Type      Type
-	DependsOn []string
-}
-
-func (r *Resource) String() string {
-	return "id=" + r.Id + ", type=" + r.Type.String()
+type Resource interface {
+	Id() string
+	Type() Type
+	String() string
 }
 
 // Type represents the type of an aws resource

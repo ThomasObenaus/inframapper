@@ -7,13 +7,13 @@ all: vendor build cover run finish
 test: generate
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
-	@go test ./tfstate ./trace ./aws ./mappedInfra -v
+	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -v
 
 .PHONY: cover
 cover: generate
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
-	@go test ./tfstate ./trace ./aws ./mappedInfra -cover -v
+	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -cover -v
 
 #-----------------
 #-- build
