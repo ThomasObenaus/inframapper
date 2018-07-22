@@ -16,14 +16,31 @@ type tfStateLoader struct {
 	tracer trace.Tracer
 }
 
-func (sm *tfStateLoader) Load(filename string) (*terraform.State, error) {
+func (sl *tfStateLoader) Validate() error {
+	if sl.tracer == nil {
+		return fmt.Errorf("Tracer is nil")
+	}
+	return nil
+}
 
+func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
+
+	if err := sl.Validate(); err != nil {
+		return nil, err
+	}
+
+	sl.tracer.Trace("Loading tfstate from '", filename, "'...")
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("Error reading file %s: %s", filename, err.Error())
 	}
 
-	return Parse(data)
+	sl.tracer.Trace("Parse state...")
+	tfstate, err := Parse(data)
+	sl.tracer.Trace("Parse state...done")
+
+	sl.tracer.Trace("Loading tfstate from '", filename, "'...done")
+	return tfstate, err
 }
 
 // NewStateLoader creates a new instance of a StateLoader without tracing

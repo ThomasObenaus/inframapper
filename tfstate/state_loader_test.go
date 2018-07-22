@@ -20,7 +20,7 @@ func TestSMLoad(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, tfstate)
 
-	tfstate, err = sm.Load("instance.tfstate")
+	tfstate, err = sm.Load("../examples/statefiles/instance.tfstate")
 	assert.NoError(t, err)
 	assert.NotNil(t, tfstate)
 
