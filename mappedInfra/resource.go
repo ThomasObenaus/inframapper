@@ -12,5 +12,5 @@ type MappedResource interface {
 type MappedAwsResource interface {
 	Aws() aws.Resource
 	HasTerraform() bool
-	Terraform() (terraform.Resource, error)
+	Terraform() terraform.Resource
 }
