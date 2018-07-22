@@ -9,16 +9,23 @@ import (
 
 type Infra interface {
 	FindById(id string) (Resource, error)
+	FindByName(id string) (Resource, error)
 }
 
 type infraImpl struct {
 	tracer trace.Tracer
 
-	data          *tf.State
-	resourcesById map[string]Resource
+	data            *tf.State
+	resourcesById   map[string]Resource
+	resourcesByName map[string]Resource
 }
 
 func (infra *infraImpl) FindById(id string) (Resource, error) {
+	// FIXME implement this one
+	return nil, fmt.Errorf("N/A")
+}
+
+func (infra *infraImpl) FindByName(name string) (Resource, error) {
 	// FIXME implement this one
 	return nil, fmt.Errorf("N/A")
 }
@@ -33,11 +40,21 @@ func newInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
 		tracer = trace.Off()
 	}
 
-	resourcesById := createResourcesByIdMap(data, tracer)
+	resourcesById, err := createResourcesByIdMap(data, tracer)
+	if err != nil {
+		return nil, err
+	}
+
+	resourcesByName, err := createResourcesByNameMap(data, tracer)
+	if err != nil {
+		return nil, err
+	}
+
 	return &infraImpl{
-		tracer:        tracer,
-		data:          data,
-		resourcesById: resourcesById,
+		tracer:          tracer,
+		data:            data,
+		resourcesById:   resourcesById,
+		resourcesByName: resourcesByName,
 	}, nil
 
 }
@@ -46,7 +63,80 @@ func newInfra(data *tf.State) (Infra, error) {
 	return newInfraWithTracer(data, nil)
 }
 
-func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) map[string]Resource {
-	// FIXME implement this one
-	return make(map[string]Resource)
+func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+
+	var empty = make(map[string]Resource)
+
+	if data == nil {
+		return empty, fmt.Errorf("Data is nil")
+	}
+
+	if len(data.Modules) == 0 {
+		tracer.Trace("No modules given")
+		return empty, nil
+	}
+
+	module := data.Modules[0]
+	resources := module.Resources
+	if len(resources) == 0 {
+		tracer.Trace("No resources given")
+		return empty, nil
+	}
+
+	var result = make(map[string]Resource)
+
+	for name, resource := range resources {
+
+		r := &resourceImpl{
+			id:        resource.Primary.ID,
+			rType:     StrToType(resource.Type),
+			name:      name,
+			dependsOn: resource.Dependencies,
+			provider:  resource.Provider,
+		}
+
+		tracer.Trace("Add resource ", r.String())
+		result[r.Name()] = r
+	}
+
+	return result, nil
+}
+
+func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+
+	var empty = make(map[string]Resource)
+
+	if data == nil {
+		return empty, fmt.Errorf("Data is nil")
+	}
+
+	if len(data.Modules) == 0 {
+		tracer.Trace("No modules given")
+		return empty, nil
+	}
+
+	module := data.Modules[0]
+	resources := module.Resources
+	if len(resources) == 0 {
+		tracer.Trace("No resources given")
+		return empty, nil
+	}
+
+	var result = make(map[string]Resource)
+
+	for name, resource := range resources {
+
+		r := &resourceImpl{
+			id:        resource.Primary.ID,
+			rType:     StrToType(resource.Type),
+			name:      name,
+			dependsOn: resource.Dependencies,
+			provider:  resource.Provider,
+		}
+
+		tracer.Trace("Add resource ", r.String())
+		result[r.Id()] = r
+	}
+
+	return result, nil
 }

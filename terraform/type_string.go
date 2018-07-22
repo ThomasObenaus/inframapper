@@ -4,9 +4,9 @@ package terraform
 
 import "strconv"
 
-const _Type_name = "Type_aws_vpc"
+const _Type_name = "Type_unkownType_aws_vpc"
 
-var _Type_index = [...]uint8{0, 12}
+var _Type_index = [...]uint8{0, 11, 23}
 
 func (i Type) String() string {
 	if i < 0 || i >= Type(len(_Type_index)-1) {
