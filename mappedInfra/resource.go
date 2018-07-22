@@ -2,7 +2,7 @@ package mappedInfra
 
 import (
 	"github.com/thomas.obenaus/terrastate/aws"
-	"github.com/thomas.obenaus/terrastate/tfstate"
+	"github.com/thomas.obenaus/terrastate/terraform"
 )
 
 type MappedResource interface {
@@ -12,5 +12,5 @@ type MappedResource interface {
 type MappedAwsResource interface {
 	Aws() aws.Resource
 	HasTerraform() bool
-	Terraform() (tfstate.Resource, error)
+	Terraform() (terraform.Resource, error)
 }
