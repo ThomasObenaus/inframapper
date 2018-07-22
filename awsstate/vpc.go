@@ -1,8 +1,6 @@
 package awsstate
 
 import (
-	"log"
-
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/thomas.obenaus/terrastate/helper"
 )
@@ -17,8 +15,8 @@ func (vpc *AwsVpc) Id() string {
 	return vpc.VpcId
 }
 
-func (vpc *AwsVpc) Type() string {
-	return "VPC"
+func (vpc *AwsVpc) Type() Type {
+	return Type_VPC
 }
 
 func (vpc *AwsVpc) String() string {
@@ -31,7 +29,7 @@ func (vpc *AwsVpc) String() string {
 	return result
 }
 
-func (sl *stateLoaderImpl) loadVpc() ([]AwsVpc, error) {
+func (sl *resourceLoaderImpl) loadVpc() ([]AwsVpc, error) {
 
 	if err := sl.Validate(); err != nil {
 		return nil, err
@@ -62,7 +60,6 @@ func (sl *stateLoaderImpl) loadVpc() ([]AwsVpc, error) {
 		}
 
 		awsVpcs = append(awsVpcs, awsVpc)
-		log.Printf("VPC: %s\n", awsVpc.String())
 	}
 
 	return awsVpcs, nil

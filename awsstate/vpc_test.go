@@ -13,7 +13,7 @@ func TestLoadVPCFail(t *testing.T) {
 	require.NotNil(t, sess)
 	require.Nil(t, err)
 
-	sl := stateLoaderImpl{
+	sl := resourceLoaderImpl{
 		session: sess,
 		tracer:  trace.Off(),
 	}
@@ -29,7 +29,7 @@ func TestLoadVPC(t *testing.T) {
 	require.NotNil(t, sess)
 	require.Nil(t, err)
 
-	sl := stateLoaderImpl{
+	sl := resourceLoaderImpl{
 		session: sess,
 		tracer:  trace.Off(),
 	}

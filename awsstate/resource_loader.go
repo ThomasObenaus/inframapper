@@ -7,18 +7,19 @@ import (
 	"github.com/thomas.obenaus/terrastate/trace"
 )
 
-type StateLoader interface {
+type ResourceLoader interface {
 	Load() error
+	Validate() error
 }
 
-type stateLoaderImpl struct {
+type resourceLoaderImpl struct {
 	session    *session.Session
 	tracer     trace.Tracer
 	awsProfile string
 	awsRegion  string
 }
 
-func (sl *stateLoaderImpl) Load() error {
+func (sl *resourceLoaderImpl) Load() error {
 
 	_, err := sl.loadVpc()
 	if err != nil {
@@ -28,7 +29,7 @@ func (sl *stateLoaderImpl) Load() error {
 	return nil
 }
 
-func (sl *stateLoaderImpl) Validate() error {
+func (sl *resourceLoaderImpl) Validate() error {
 	if sl.session == nil {
 		return fmt.Errorf("Session is nil")
 	}
@@ -39,11 +40,13 @@ func (sl *stateLoaderImpl) Validate() error {
 	return nil
 }
 
-func NewStateLoader(awsProfile string, awsRegion string) (StateLoader, error) {
-	return NewStateLoaderWithTracer(awsProfile, awsRegion, nil)
+// NewResourceLoader creates a ResourceLoader instance
+func NewResourceLoader(awsProfile string, awsRegion string) (ResourceLoader, error) {
+	return NewResourceLoaderWithTracer(awsProfile, awsRegion, nil)
 }
 
-func NewStateLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.Tracer) (StateLoader, error) {
+// NewResourceLoaderWithTracer creates a ResourceLoader instance using the given Tracer for logging
+func NewResourceLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.Tracer) (ResourceLoader, error) {
 
 	if len(awsProfile) == 0 {
 		return nil, fmt.Errorf("AWS profile is empty")
@@ -66,12 +69,12 @@ func NewStateLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.
 		tracer = trace.Off()
 	}
 
-	stateLoader := &stateLoaderImpl{
+	resourdeLoader := &resourceLoaderImpl{
 		session:    sess,
 		tracer:     tracer,
 		awsProfile: awsProfile,
 		awsRegion:  awsRegion,
 	}
 
-	return stateLoader, nil
+	return resourdeLoader, nil
 }
