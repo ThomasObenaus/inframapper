@@ -5,21 +5,21 @@ import (
 	"github.com/thomas.obenaus/terrastate/helper"
 )
 
-type AwsVpc struct {
+type Vpc struct {
 	VpcId        string
 	IsDefaultVPC bool
 	CIDR         string
 }
 
-func (vpc *AwsVpc) Id() string {
+func (vpc *Vpc) Id() string {
 	return vpc.VpcId
 }
 
-func (vpc *AwsVpc) Type() Type {
+func (vpc *Vpc) Type() Type {
 	return Type_VPC
 }
 
-func (vpc *AwsVpc) String() string {
+func (vpc *Vpc) String() string {
 	result := "id=" + vpc.VpcId + ", cidr=" + vpc.CIDR
 
 	if vpc.IsDefaultVPC {
@@ -29,7 +29,7 @@ func (vpc *AwsVpc) String() string {
 	return result
 }
 
-func (sl *resourceLoaderImpl) loadVpc() ([]AwsVpc, error) {
+func (sl *resourceLoaderImpl) loadVpc() ([]Vpc, error) {
 
 	if err := sl.Validate(); err != nil {
 		return nil, err
@@ -38,29 +38,29 @@ func (sl *resourceLoaderImpl) loadVpc() ([]AwsVpc, error) {
 	// load vpc data
 	svc := ec2.New(sl.session)
 	inDesc := &ec2.DescribeVpcsInput{DryRun: helper.NewFalse()}
-	vpcs, err := svc.DescribeVpcs(inDesc)
+	outDesc, err := svc.DescribeVpcs(inDesc)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var awsVpcs []AwsVpc
+	var vpcs []Vpc
 
-	for _, vpc := range vpcs.Vpcs {
+	for _, vpc := range outDesc.Vpcs {
 
 		if vpc == nil {
 			sl.tracer.Trace("Got nil vpc, ignore it.")
 			continue
 		}
 
-		awsVpc := AwsVpc{
+		vpc := Vpc{
 			VpcId:        *vpc.VpcId,
 			IsDefaultVPC: *vpc.IsDefault,
 			CIDR:         *vpc.CidrBlock,
 		}
 
-		awsVpcs = append(awsVpcs, awsVpc)
+		vpcs = append(vpcs, vpc)
 	}
 
-	return awsVpcs, nil
+	return vpcs, nil
 }
