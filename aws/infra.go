@@ -9,7 +9,7 @@ import (
 type Infra interface {
 	FindById(id string) (Resource, error)
 
-	FindVPC(id string) (*Vpc, error)
+	FindVpc(id string) (*Vpc, error)
 	Vpcs() []*Vpc
 }
 
@@ -25,15 +25,22 @@ type infraImpl struct {
 }
 
 func (infra *infraImpl) FindById(id string) (Resource, error) {
+	// FIXME implement this one
 	return nil, fmt.Errorf("N/A")
 }
 
-func (infra *infraImpl) FindVPC(id string) (*Vpc, error) {
+func (infra *infraImpl) FindVpc(id string) (*Vpc, error) {
+	// FIXME implement this one
 	return nil, fmt.Errorf("N/A")
 }
 
 func (infra *infraImpl) Vpcs() []*Vpc {
-	return nil
+	if infra.data == nil {
+		infra.tracer.Trace("Error: infra.data is nil, return nil.")
+		return nil
+	}
+
+	return infra.data.vpcs
 }
 
 func newInfraWithTracer(data *infraData, tracer trace.Tracer) (Infra, error) {
@@ -47,7 +54,6 @@ func newInfraWithTracer(data *infraData, tracer trace.Tracer) (Infra, error) {
 	}
 
 	resourcesById := createResourcesByIdMap(data, tracer)
-
 	return &infraImpl{
 		tracer:        tracer,
 		data:          data,
@@ -56,6 +62,11 @@ func newInfraWithTracer(data *infraData, tracer trace.Tracer) (Infra, error) {
 
 }
 
+func newInfra(data *infraData) (Infra, error) {
+	return newInfraWithTracer(data, nil)
+}
+
 func createResourcesByIdMap(data *infraData, tracer trace.Tracer) map[string]Resource {
+	// FIXME implement this one
 	return make(map[string]Resource)
 }
