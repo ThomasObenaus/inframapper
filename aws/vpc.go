@@ -1,4 +1,4 @@
-package awsresource
+package aws
 
 import (
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -29,7 +29,7 @@ func (vpc *Vpc) String() string {
 	return result
 }
 
-func (sl *resourceLoaderImpl) loadVpc() ([]Vpc, error) {
+func (sl *infraLoaderImpl) loadVpc() ([]Vpc, error) {
 
 	if err := sl.Validate(); err != nil {
 		return nil, err

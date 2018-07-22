@@ -1,4 +1,4 @@
-package awsresource
+package aws
 
 import (
 	"fmt"
@@ -7,19 +7,19 @@ import (
 	"github.com/thomas.obenaus/terrastate/trace"
 )
 
-type ResourceLoader interface {
+type InfraLoader interface {
 	Load() error
 	GetLoadedInfra() (Infra, error)
 }
 
-type resourceLoaderImpl struct {
+type infraLoaderImpl struct {
 	session    *session.Session
 	tracer     trace.Tracer
 	awsProfile string
 	awsRegion  string
 }
 
-func (sl *resourceLoaderImpl) Load() error {
+func (sl *infraLoaderImpl) Load() error {
 
 	_, err := sl.loadVpc()
 	if err != nil {
@@ -29,12 +29,12 @@ func (sl *resourceLoaderImpl) Load() error {
 	return nil
 }
 
-func (sl *resourceLoaderImpl) GetLoadedInfra() (Infra, error) {
+func (sl *infraLoaderImpl) GetLoadedInfra() (Infra, error) {
 	return nil, fmt.Errorf("N/A")
 }
 
 // Validate if the preconditions to load the infrastructure are met
-func (sl *resourceLoaderImpl) Validate() error {
+func (sl *infraLoaderImpl) Validate() error {
 	if sl.session == nil {
 		return fmt.Errorf("Session is nil")
 	}
@@ -45,13 +45,13 @@ func (sl *resourceLoaderImpl) Validate() error {
 	return nil
 }
 
-// NewResourceLoader creates a ResourceLoader instance
-func NewResourceLoader(awsProfile string, awsRegion string) (ResourceLoader, error) {
-	return NewResourceLoaderWithTracer(awsProfile, awsRegion, nil)
+// NewInfraLoader creates a InfraLoader instance
+func NewInfraLoader(awsProfile string, awsRegion string) (InfraLoader, error) {
+	return NewInfraLoaderWithTracer(awsProfile, awsRegion, nil)
 }
 
-// NewResourceLoaderWithTracer creates a ResourceLoader instance using the given Tracer for logging
-func NewResourceLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.Tracer) (ResourceLoader, error) {
+// NewInfraLoaderWithTracer creates a InfraLoader instance using the given Tracer for logging
+func NewInfraLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.Tracer) (InfraLoader, error) {
 
 	if len(awsProfile) == 0 {
 		return nil, fmt.Errorf("AWS profile is empty")
@@ -74,7 +74,7 @@ func NewResourceLoaderWithTracer(awsProfile string, awsRegion string, tracer tra
 		tracer = trace.Off()
 	}
 
-	resourdeLoader := &resourceLoaderImpl{
+	resourdeLoader := &infraLoaderImpl{
 		session:    sess,
 		tracer:     tracer,
 		awsProfile: awsProfile,

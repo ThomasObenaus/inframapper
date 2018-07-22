@@ -1,4 +1,4 @@
-package awsresource
+package aws
 
 import (
 	"fmt"
