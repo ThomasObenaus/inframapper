@@ -1,19 +1,19 @@
 .DEFAULT_GOAL				:= all
 name 								:= "terrastate"
 
-all: vendor build cover run
+all: vendor build cover run finish
 
 .PHONY: test
 test:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
-	@go test ./tfstate ./trace ./aws -v
+	@go test ./tfstate ./trace ./aws ./mappedInfra -v
 
 .PHONY: cover
 cover:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
-	@go test ./tfstate ./trace ./aws -cover -v
+	@go test ./tfstate ./trace ./aws ./mappedInfra -cover -v
 
 #-----------------
 #-- build
