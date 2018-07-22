@@ -4,13 +4,13 @@ name 								:= "terrastate"
 all: vendor build cover run finish
 
 .PHONY: test
-test:
+test: generate
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
 	@go test ./tfstate ./trace ./aws ./mappedInfra -v
 
 .PHONY: cover
-cover:
+cover: generate
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
 	@go test ./tfstate ./trace ./aws ./mappedInfra -cover -v
@@ -18,7 +18,7 @@ cover:
 #-----------------
 #-- build
 #-----------------
-build:
+build: generate
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Build the $(name)"
 	@go build -o $(name) .
@@ -37,6 +37,12 @@ depend.install:
 	@dep ensure
 
 vendor: depend.install
+
+generate:
+	@echo "----------------------------------------------------------------------------------"
+	@echo "--> generate String() for enums"
+	@stringer -type=Type terraform
+	@stringer -type=Type aws
 
 run: build
 	@echo "----------------------------------------------------------------------------------"
