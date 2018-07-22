@@ -1,4 +1,4 @@
-package awsstate
+package awsresource
 
 import (
 	"github.com/aws/aws-sdk-go/aws"

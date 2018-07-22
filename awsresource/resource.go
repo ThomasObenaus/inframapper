@@ -1,9 +1,10 @@
-package awsstate
+package awsresource
 
 // Resource represents an aws resource
 type Resource interface {
 	Id() string
 	Type() Type
+	String() string
 }
 
 // Type represents the type of an aws resource

@@ -8,3 +8,5 @@ file.plan
 terraform.tfstate
 terraform.tfstate.backup
 awsstate/debug\.test
+
+awsresource/debug\.test

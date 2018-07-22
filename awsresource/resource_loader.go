@@ -1,4 +1,4 @@
-package awsstate
+package awsresource
 
 import (
 	"fmt"
