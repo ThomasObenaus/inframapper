@@ -35,14 +35,15 @@ func TestRLLoad(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
-	sl, err := NewResourceLoader("playground", "eu-central-1")
-	require.Nil(t, err)
-	require.NotNil(t, sl)
-	assert.Nil(t, sl.Load())
+	rl := resourceLoaderImpl{}
+	err := rl.Validate()
+	assert.NotNil(t, err)
 
-	sl, err = NewResourceLoader("unknown", "unknown")
+	session, err := newAWSSession("blubb", "bla")
 	require.Nil(t, err)
-	require.NotNil(t, sl)
-	assert.NotNil(t, sl.Load())
+	require.NotNil(t, session)
+	rl = resourceLoaderImpl{session: session}
+	err = rl.Validate()
+	assert.NotNil(t, err)
 
 }
