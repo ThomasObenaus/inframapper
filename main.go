@@ -2,22 +2,25 @@ package main
 
 import (
 	"log"
+	"os"
 
-	"github.com/thomas.obenaus/terrastate/awsstate"
+	"github.com/thomas.obenaus/terrastate/aws"
+	"github.com/thomas.obenaus/terrastate/trace"
 )
 
 func main() {
 
-	profile := "shared"
-	region := "us-east-1"
+	profile := "playground"
+	region := "eu-central-1"
+	tracer := trace.New(os.Stdout)
 
-	awsSl, err := awsstate.NewStateLoader(profile, region)
+	aws, err := aws.NewInfraLoaderWithTracer(profile, region, tracer)
 	if err != nil {
-		log.Fatalf("Error creating StateLoader for AWS: %s", err.Error())
+		log.Fatalf("Error creating InfraLoader for AWS: %s", err.Error())
 	}
 
-	if err := awsSl.Load(); err != nil {
-		log.Fatalf("Error loading AWS state: %s", err.Error())
+	if err := aws.Load(); err != nil {
+		log.Fatalf("Error loading AWS infra: %s", err.Error())
 
 	}
 

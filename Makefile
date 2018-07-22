@@ -3,11 +3,13 @@ name 								:= "terrastate"
 
 all: vendor build cover run
 
+.PHONY: test
 test:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
 	@go test ./tfstate ./trace ./aws -v
 
+.PHONY: cover
 cover:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"

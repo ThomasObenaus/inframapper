@@ -10,3 +10,5 @@ terraform.tfstate.backup
 awsstate/debug\.test
 
 aws/debug\.test
+
+debug

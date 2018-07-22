@@ -17,14 +17,35 @@ type infraLoaderImpl struct {
 	tracer     trace.Tracer
 	awsProfile string
 	awsRegion  string
+	infra      Infra
 }
 
 func (sl *infraLoaderImpl) Load() error {
 
-	_, err := sl.loadVpc()
+	if err := sl.Validate(); err != nil {
+		return err
+	}
+
+	// VPC - section
+	sl.tracer.Trace("Load vpcs ...")
+	vpcs, err := sl.loadVpcs()
 	if err != nil {
 		return err
 	}
+	sl.tracer.Trace("Load vpcs (", len(vpcs), ")...done")
+
+	// put the data together
+	infraData := &infraData{
+		vpcs: vpcs,
+	}
+
+	// create the infra
+	sl.tracer.Trace("Create aws infra ...")
+	sl.infra, err = newInfraWithTracer(infraData, sl.tracer)
+	if err != nil {
+		return err
+	}
+	sl.tracer.Trace("Create aws infra ...done.")
 
 	return nil
 }

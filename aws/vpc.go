@@ -29,7 +29,7 @@ func (vpc *Vpc) String() string {
 	return result
 }
 
-func (sl *infraLoaderImpl) loadVpc() ([]Vpc, error) {
+func (sl *infraLoaderImpl) loadVpcs() ([]*Vpc, error) {
 
 	if err := sl.Validate(); err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (sl *infraLoaderImpl) loadVpc() ([]Vpc, error) {
 		return nil, err
 	}
 
-	var vpcs []Vpc
+	var vpcs []*Vpc
 
 	for _, vpc := range outDesc.Vpcs {
 
@@ -53,7 +53,7 @@ func (sl *infraLoaderImpl) loadVpc() ([]Vpc, error) {
 			continue
 		}
 
-		vpc := Vpc{
+		vpc := &Vpc{
 			VpcId:        *vpc.VpcId,
 			IsDefaultVPC: *vpc.IsDefault,
 			CIDR:         *vpc.CidrBlock,

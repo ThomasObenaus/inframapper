@@ -18,7 +18,7 @@ func TestLoadVPCFail(t *testing.T) {
 		tracer:  trace.Off(),
 	}
 
-	vpcs, err := sl.loadVpc()
+	vpcs, err := sl.loadVpcs()
 	assert.Nil(t, vpcs)
 	assert.NotNil(t, err)
 
@@ -34,7 +34,7 @@ func TestLoadVPC(t *testing.T) {
 		tracer:  trace.Off(),
 	}
 
-	vpcs, err := sl.loadVpc()
+	vpcs, err := sl.loadVpcs()
 	assert.NotNil(t, vpcs)
 	assert.Nil(t, err)
 
