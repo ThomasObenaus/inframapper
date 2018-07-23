@@ -4,31 +4,50 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/thomas.obenaus/terrastate/trace"
 )
 
 func TestFindById(t *testing.T) {
 
-	data := &infraData{}
-	infra := &infraImpl{tracer: trace.Off(), data: data}
+	var vpcs []*Vpc
+	vpc := &Vpc{
+		CIDR:  "BLA",
+		VpcId: "blubb",
+	}
+	vpcs = append(vpcs, vpc)
 
-	resource, err := infra.FindById("ABCD")
-	assert.Error(t, err)
+	data := &infraData{vpcs: vpcs}
+	infra, err := newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+
+	resource := infra.FindById("ABCD")
 	assert.Nil(t, resource)
 
-	// TODO add positive tests
+	resource = infra.FindById("blubb")
+	assert.NotNil(t, resource)
 }
 
 func TestFindVpc(t *testing.T) {
 
-	data := &infraData{}
-	infra := &infraImpl{tracer: trace.Off(), data: data}
+	var vpcs []*Vpc
+	vpc := &Vpc{
+		CIDR:  "BLA",
+		VpcId: "blubb",
+	}
+	vpcs = append(vpcs, vpc)
 
-	vpc, err := infra.FindVpc("ABCD")
-	assert.Error(t, err)
+	data := &infraData{vpcs: vpcs}
+	infra, err := newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+
+	vpc = infra.FindVpc("ABCD")
 	assert.Nil(t, vpc)
 
-	// TODO add positive tests
+	vpc = infra.FindVpc("blubb")
+	assert.NotNil(t, vpc)
 }
 
 func TestNew(t *testing.T) {
@@ -53,6 +72,4 @@ func TestVpcs(t *testing.T) {
 	infra = &infraImpl{tracer: trace.Off()}
 	vpcs = infra.Vpcs()
 	assert.Nil(t, vpcs)
-
-	// TODO add positive tests
 }

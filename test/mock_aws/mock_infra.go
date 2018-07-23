@@ -46,11 +46,10 @@ func (mr *MockInfraMockRecorder) FindById(id interface{}) *gomock.Call {
 }
 
 // FindVpc mocks base method
-func (m *MockInfra) FindVpc(id string) (*aws.Vpc, error) {
+func (m *MockInfra) FindVpc(id string) *aws.Vpc {
 	ret := m.ctrl.Call(m, "FindVpc", id)
 	ret0, _ := ret[0].(*aws.Vpc)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // FindVpc indicates an expected call of FindVpc
