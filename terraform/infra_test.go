@@ -66,21 +66,49 @@ func TestCreateResourcesByNameMap(t *testing.T) {
 
 	tracer := trace.Off()
 
-	resourcesById, err := createResourcesByNameMap(nil, tracer)
-	assert.Empty(t, resourcesById)
+	resourcesByName, err := createResourcesByNameMap(nil, tracer)
+	assert.Empty(t, resourcesByName)
 	assert.Error(t, err)
 
 	tfstate := &terraform.State{}
-	resourcesById, err = createResourcesByNameMap(tfstate, tracer)
-	assert.Empty(t, resourcesById)
+	resourcesByName, err = createResourcesByNameMap(tfstate, tracer)
+	assert.Empty(t, resourcesByName)
 	assert.NoError(t, err)
 
 	tfstate = &terraform.State{}
 	err = json.Unmarshal([]byte(vpc), tfstate)
 	require.NoError(t, err)
 
-	resourcesById, err = createResourcesByNameMap(tfstate, tracer)
-	assert.NotEmpty(t, resourcesById)
+	resourcesByName, err = createResourcesByNameMap(tfstate, tracer)
+	assert.NotEmpty(t, resourcesByName)
 	assert.NoError(t, err)
-	assert.NotNil(t, resourcesById["aws_vpc.default"])
+	assert.NotNil(t, resourcesByName["aws_vpc.default"])
+}
+
+func TestFindResourceByName(t *testing.T) {
+	tfstate := &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfstate)
+	require.NoError(t, err)
+
+	infra, err := newInfra(tfstate)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+
+	resource := infra.FindByName("aws_vpc.default")
+	require.NotNil(t, resource)
+	assert.Equal(t, "aws_vpc.default", resource.Name())
+}
+
+func TestFindResourceById(t *testing.T) {
+	tfstate := &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfstate)
+	require.NoError(t, err)
+
+	infra, err := newInfra(tfstate)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+
+	resource := infra.FindById("vpc-ff5fec97")
+	require.NotNil(t, resource)
+	assert.Equal(t, "vpc-ff5fec97", resource.Id())
 }

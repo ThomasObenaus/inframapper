@@ -8,8 +8,8 @@ import (
 )
 
 type Infra interface {
-	FindById(id string) (Resource, error)
-	FindByName(id string) (Resource, error)
+	FindById(id string) Resource
+	FindByName(id string) Resource
 }
 
 type infraImpl struct {
@@ -20,14 +20,12 @@ type infraImpl struct {
 	resourcesByName map[string]Resource
 }
 
-func (infra *infraImpl) FindById(id string) (Resource, error) {
-	// FIXME implement this one
-	return nil, fmt.Errorf("N/A")
+func (infra *infraImpl) FindById(id string) Resource {
+	return infra.resourcesById[id]
 }
 
-func (infra *infraImpl) FindByName(name string) (Resource, error) {
-	// FIXME implement this one
-	return nil, fmt.Errorf("N/A")
+func (infra *infraImpl) FindByName(name string) Resource {
+	return infra.resourcesByName[name]
 }
 
 func newInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {

@@ -12,3 +12,5 @@ awsstate/debug\.test
 aws/debug\.test
 
 debug
+
+terraform/debug\.test
