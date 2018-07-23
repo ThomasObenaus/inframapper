@@ -2,18 +2,25 @@ package aws
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/thomas.obenaus/terrastate/trace"
 )
 
 type Infra interface {
 	FindById(id string) Resource
-
 	FindVpc(id string) *Vpc
 	Vpcs() []*Vpc
+	NumResources() int
+	Region() string
+
+	String() string
 }
 
 type infraData struct {
+	profile string
+	region  string
+
 	vpcs []*Vpc
 }
 
@@ -24,8 +31,27 @@ type infraImpl struct {
 	resourcesById map[string]Resource
 }
 
+func (infra *infraImpl) Region() string {
+	if infra.data == nil || len(infra.data.region) == 0 {
+		return "UNKNOWN"
+	}
+	return infra.data.region
+}
+
+func (infra *infraImpl) String() string {
+	if infra.data == nil {
+		return "INVALID"
+	}
+
+	return "[" + infra.data.profile + "] " + infra.Region() + ", " + strconv.Itoa(infra.NumResources())
+}
+
 func (infra *infraImpl) FindById(id string) Resource {
 	return infra.resourcesById[id]
+}
+
+func (infra *infraImpl) NumResources() int {
+	return len(infra.resourcesById)
 }
 
 func (infra *infraImpl) FindVpc(id string) *Vpc {

@@ -1,6 +1,8 @@
 package aws
 
 import (
+	"fmt"
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -46,4 +48,22 @@ func TestValidate(t *testing.T) {
 	err = rl.Validate()
 	assert.NotNil(t, err)
 
+}
+
+func ExampleNewInfraLoader() {
+	iLoader, err := NewInfraLoader("playground", "eu-central-1")
+	if err != nil {
+		log.Fatalf("Error, creatging infra-loader: %s", err.Error())
+	}
+
+	if err := iLoader.Load(); err != nil {
+		log.Fatalf("Error, loading infra: %s", err.Error())
+	}
+
+	infra := iLoader.GetLoadedInfra()
+	if infra == nil {
+		log.Fatalf("Error, obtaining loaded infra: %s", err.Error())
+	}
+
+	fmt.Println(infra.String())
 }

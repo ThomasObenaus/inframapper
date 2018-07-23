@@ -9,7 +9,7 @@ import (
 
 type InfraLoader interface {
 	Load() error
-	GetLoadedInfra() (Infra, error)
+	GetLoadedInfra() Infra
 }
 
 type infraLoaderImpl struct {
@@ -36,7 +36,9 @@ func (sl *infraLoaderImpl) Load() error {
 
 	// put the data together
 	infraData := &infraData{
-		vpcs: vpcs,
+		profile: sl.awsProfile,
+		region:  sl.awsRegion,
+		vpcs:    vpcs,
 	}
 
 	// create the infra
@@ -50,8 +52,8 @@ func (sl *infraLoaderImpl) Load() error {
 	return nil
 }
 
-func (sl *infraLoaderImpl) GetLoadedInfra() (Infra, error) {
-	return nil, fmt.Errorf("N/A")
+func (sl *infraLoaderImpl) GetLoadedInfra() Infra {
+	return sl.infra
 }
 
 // Validate if the preconditions to load the infrastructure are met
