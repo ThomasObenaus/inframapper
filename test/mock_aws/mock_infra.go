@@ -68,3 +68,39 @@ func (m *MockInfra) Vpcs() []*aws.Vpc {
 func (mr *MockInfraMockRecorder) Vpcs() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Vpcs", reflect.TypeOf((*MockInfra)(nil).Vpcs))
 }
+
+// NumResources mocks base method
+func (m *MockInfra) NumResources() int {
+	ret := m.ctrl.Call(m, "NumResources")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// NumResources indicates an expected call of NumResources
+func (mr *MockInfraMockRecorder) NumResources() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NumResources", reflect.TypeOf((*MockInfra)(nil).NumResources))
+}
+
+// Region mocks base method
+func (m *MockInfra) Region() string {
+	ret := m.ctrl.Call(m, "Region")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Region indicates an expected call of Region
+func (mr *MockInfraMockRecorder) Region() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Region", reflect.TypeOf((*MockInfra)(nil).Region))
+}
+
+// String mocks base method
+func (m *MockInfra) String() string {
+	ret := m.ctrl.Call(m, "String")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// String indicates an expected call of String
+func (mr *MockInfraMockRecorder) String() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "String", reflect.TypeOf((*MockInfra)(nil).String))
+}

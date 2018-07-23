@@ -46,11 +46,10 @@ func (mr *MockInfraLoaderMockRecorder) Load() *gomock.Call {
 }
 
 // GetLoadedInfra mocks base method
-func (m *MockInfraLoader) GetLoadedInfra() (aws.Infra, error) {
+func (m *MockInfraLoader) GetLoadedInfra() aws.Infra {
 	ret := m.ctrl.Call(m, "GetLoadedInfra")
 	ret0, _ := ret[0].(aws.Infra)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // GetLoadedInfra indicates an expected call of GetLoadedInfra
