@@ -5,10 +5,9 @@
 package mock_aws
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	aws "github.com/thomas.obenaus/terrastate/aws"
+	reflect "reflect"
 )
 
 // MockInfra is a mock of Infra interface
@@ -35,11 +34,10 @@ func (m *MockInfra) EXPECT() *MockInfraMockRecorder {
 }
 
 // FindById mocks base method
-func (m *MockInfra) FindById(id string) (aws.Resource, error) {
+func (m *MockInfra) FindById(id string) aws.Resource {
 	ret := m.ctrl.Call(m, "FindById", id)
 	ret0, _ := ret[0].(aws.Resource)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	return ret0
 }
 
 // FindById indicates an expected call of FindById

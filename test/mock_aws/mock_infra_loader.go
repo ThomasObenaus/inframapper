@@ -5,10 +5,9 @@
 package mock_aws
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	aws "github.com/thomas.obenaus/terrastate/aws"
+	reflect "reflect"
 )
 
 // MockInfraLoader is a mock of InfraLoader interface

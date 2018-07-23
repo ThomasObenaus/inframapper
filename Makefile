@@ -40,9 +40,13 @@ vendor: depend.install
 
 generate:
 	@echo "----------------------------------------------------------------------------------"
-	@echo "--> generate String() for enums"
+	@echo "--> generate String() for enums (golang.org/x/tools/cmd/stringer is required for this)"
 	@stringer -type=Type terraform
 	@stringer -type=Type aws
+	@echo "--> generate mocks (github.com/golang/mock/gomock is required for this)"
+	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go
+	@mockgen -source=aws/infra.go -destination test/mock_aws/mock_infra.go
+	@mockgen -source=aws/resource.go -destination test/mock_aws/mock_resource.go
 
 run: build
 	@echo "----------------------------------------------------------------------------------"
