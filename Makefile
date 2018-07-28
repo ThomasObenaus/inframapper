@@ -43,6 +43,7 @@ generate:
 	@echo "--> generate String() for enums (golang.org/x/tools/cmd/stringer is required for this)"
 	@stringer -type=Type terraform
 	@stringer -type=Type aws
+	@stringer -type=Type mappedInfra
 	@echo "--> generate mocks (github.com/golang/mock/gomock is required for this)"
 	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go
 	@mockgen -source=aws/infra.go -destination test/mock_aws/mock_infra.go

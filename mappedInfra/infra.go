@@ -2,32 +2,22 @@ package mappedInfra
 
 type Infra interface {
 	NumResources() int
-	Resources() []MappedResource
-	ResourcesByType() []MappedResource
-	ResourceByName() MappedResource
-	ResourceById() MappedResource
+	Resources() map[string]MappedResource
+	ResourceById(id string) MappedResource
 }
 
 type infraImpl struct {
-	mappedResources []MappedResource
+	mappedResources map[string]MappedResource
 }
 
 func (in *infraImpl) NumResources() int {
 	return len(in.mappedResources)
 }
 
-func (in *infraImpl) Resources() []MappedResource {
-	return nil
+func (in *infraImpl) Resources() map[string]MappedResource {
+	return in.mappedResources
 }
 
-func (in *infraImpl) ResourcesByType() []MappedResource {
-	return nil
-}
-
-func (in *infraImpl) ResourceByName() MappedResource {
-	return nil
-}
-
-func (in *infraImpl) ResourceById() MappedResource {
-	return nil
+func (in *infraImpl) ResourceById(id string) MappedResource {
+	return in.mappedResources[id]
 }

@@ -21,7 +21,7 @@ func (m *mapperImpl) String() string {
 }
 
 func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
-	mappedResources := make([]MappedResource, 0)
+	mappedResources := make(map[string]MappedResource, 0)
 	// handle vpcs
 	for _, awsVpc := range aws.Vpcs() {
 		if awsVpc == nil {
@@ -33,7 +33,7 @@ func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
 		tfResource := tf.FindById(awsVpc.Id())
 
 		mResource := NewVpc(awsVpc, tfResource)
-		mappedResources = append(mappedResources, mResource)
+		mappedResources[awsVpc.Id()] = mResource
 	}
 
 	infra := &infraImpl{
