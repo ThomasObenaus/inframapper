@@ -47,6 +47,8 @@ generate:
 	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go
 	@mockgen -source=aws/infra.go -destination test/mock_aws/mock_infra.go
 	@mockgen -source=aws/resource.go -destination test/mock_aws/mock_resource.go
+	@mockgen -source=terraform/resource.go -destination test/mock_terraform/mock_resource.go
+	@mockgen -source=terraform/infra.go -destination test/mock_terraform/mock_infra.go
 
 run: build
 	@echo "----------------------------------------------------------------------------------"

@@ -4,37 +4,29 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	terraform "github.com/hashicorp/terraform/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/thomas.obenaus/terrastate/test/mock_aws"
+	"github.com/thomas.obenaus/terrastate/test/mock_terraform"
 )
 
-func TestNew(t *testing.T) {
+func TestMap(t *testing.T) {
 
-	mapper, err := NewMapper(nil, nil)
-	assert.Nil(t, mapper)
-	assert.Error(t, err)
+	mapper := NewMapper()
+	require.NotNil(t, mapper)
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	mockObj := mock_aws.NewMockInfra(mockCtrl)
+	mockAwsInfraObj := mock_aws.NewMockInfra(mockCtrl)
+	mockTerraformInfraObj := mock_terraform.NewMockInfra(mockCtrl)
 
-	tfstate := &terraform.State{}
-	mapper, err = NewMapper(mockObj, tfstate)
-	assert.NotNil(t, mapper)
+	mappedInfra, err := mapper.Map(mockAwsInfraObj, mockTerraformInfraObj)
+	assert.NotNil(t, mappedInfra)
 	assert.NoError(t, err)
 }
 
-func TestMap(t *testing.T) {
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-	mockObj := mock_aws.NewMockInfra(mockCtrl)
-
-	tfstate := &terraform.State{}
-	mapper, err := NewMapper(mockObj, tfstate)
+func TestNew(t *testing.T) {
+	mapper := NewMapper()
 	require.NotNil(t, mapper)
-	require.NoError(t, err)
-
 }
