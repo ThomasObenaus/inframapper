@@ -6,7 +6,7 @@ import (
 )
 
 type vpc struct {
-	awsVpc aws.Vpc
+	awsVpc *aws.Vpc
 	tfVpc  terraform.Resource
 }
 
@@ -30,8 +30,8 @@ func (v *vpc) Aws() aws.Resource {
 	return v
 }
 
-func (v *vpc) IsAws() bool {
-	return true
+func (v *vpc) HasAws() bool {
+	return v.awsVpc != nil
 }
 
 func (v *vpc) HasTerraform() bool {
@@ -42,6 +42,10 @@ func (v *vpc) Terraform() terraform.Resource {
 	return v.tfVpc
 }
 
-func newVpc(awsVpc aws.Vpc, tfVpc terraform.Resource) MappedResource {
+func (v *vpc) ResourceType() Type {
+	return Type_VPC
+}
+
+func NewVpc(awsVpc *aws.Vpc, tfVpc terraform.Resource) MappedResource {
 	return &vpc{awsVpc: awsVpc, tfVpc: tfVpc}
 }

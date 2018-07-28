@@ -29,12 +29,12 @@ var vpc = `{
 
 func TestNew(t *testing.T) {
 
-	infra, err := newInfra(nil)
+	infra, err := NewInfra(nil)
 	assert.Nil(t, infra)
 	assert.Error(t, err)
 
 	tfstate := &terraform.State{}
-	infra, err = newInfra(tfstate)
+	infra, err = NewInfra(tfstate)
 	assert.NotNil(t, infra)
 	assert.NoError(t, err)
 }
@@ -90,7 +90,7 @@ func TestFindResourceByName(t *testing.T) {
 	err := json.Unmarshal([]byte(vpc), tfstate)
 	require.NoError(t, err)
 
-	infra, err := newInfra(tfstate)
+	infra, err := NewInfra(tfstate)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 
@@ -104,7 +104,7 @@ func TestFindResourceById(t *testing.T) {
 	err := json.Unmarshal([]byte(vpc), tfstate)
 	require.NoError(t, err)
 
-	infra, err := newInfra(tfstate)
+	infra, err := NewInfra(tfstate)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 

@@ -1,8 +1,6 @@
 package mappedInfra
 
 import (
-	"fmt"
-
 	"github.com/thomas.obenaus/terrastate/terraform"
 	"github.com/thomas.obenaus/terrastate/trace"
 
@@ -23,11 +21,29 @@ func (m *mapperImpl) String() string {
 }
 
 func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
-	return nil, fmt.Errorf("N/A")
+	mappedResources := make([]MappedResource, 0)
+	// handle vpcs
+	for _, awsVpc := range aws.Vpcs() {
+		if awsVpc == nil {
+			m.tracer.Trace("Ignore vpc which is nil")
+			continue
+		}
+
+		m.tracer.Trace("Map ", awsVpc.String())
+		tfResource := tf.FindById(awsVpc.Id())
+
+		mResource := NewVpc(awsVpc, tfResource)
+		mappedResources = append(mappedResources, mResource)
+	}
+
+	infra := &infraImpl{
+		mappedResources: mappedResources,
+	}
+
+	return infra, nil
 }
 
 func NewMapperWithTracer(tracer trace.Tracer) Mapper {
-
 	if tracer == nil {
 		tracer = trace.Off()
 	}

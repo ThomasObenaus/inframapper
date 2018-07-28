@@ -1,19 +1,33 @@
 package mappedInfra
 
-import (
-	"fmt"
-
-	"github.com/thomas.obenaus/terrastate/aws"
-	"github.com/thomas.obenaus/terrastate/terraform"
-)
-
 type Infra interface {
+	NumResources() int
+	Resources() []MappedResource
+	ResourcesByType() []MappedResource
+	ResourceByName() MappedResource
+	ResourceById() MappedResource
 }
 
 type infraImpl struct {
+	mappedResources []MappedResource
 }
 
-func DoMapping(aws *aws.Infra, tf *terraform.Infra) (Infra, error) {
+func (in *infraImpl) NumResources() int {
+	return len(in.mappedResources)
+}
 
-	return nil, fmt.Errorf("N/A")
+func (in *infraImpl) Resources() []MappedResource {
+	return nil
+}
+
+func (in *infraImpl) ResourcesByType() []MappedResource {
+	return nil
+}
+
+func (in *infraImpl) ResourceByName() MappedResource {
+	return nil
+}
+
+func (in *infraImpl) ResourceById() MappedResource {
+	return nil
 }

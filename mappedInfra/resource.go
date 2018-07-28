@@ -7,7 +7,15 @@ import (
 
 type MappedResource interface {
 	Aws() aws.Resource
-	IsAws() bool
+	HasAws() bool
 	HasTerraform() bool
 	Terraform() terraform.Resource
+	ResourceType() Type
 }
+
+// Type represents the type of an aws resource
+type Type int
+
+const (
+	Type_VPC Type = iota
+)
