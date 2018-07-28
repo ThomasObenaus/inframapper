@@ -1,3 +1,4 @@
+// Package aws contains code needed to query aws infrastructure
 package aws
 
 import (

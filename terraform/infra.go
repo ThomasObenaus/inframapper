@@ -2,6 +2,7 @@ package terraform
 
 import (
 	"fmt"
+	"strconv"
 
 	tf "github.com/hashicorp/terraform/terraform"
 	"github.com/thomas.obenaus/terrastate/trace"
@@ -10,6 +11,8 @@ import (
 type Infra interface {
 	FindById(id string) Resource
 	FindByName(id string) Resource
+	NumResources() int
+	String() string
 }
 
 type infraImpl struct {
@@ -20,6 +23,14 @@ type infraImpl struct {
 	resourcesByName map[string]Resource
 }
 
+func (infra *infraImpl) NumResources() int {
+	return len(infra.resourcesByName)
+}
+
+func (infra *infraImpl) String() string {
+	return "#res=" + strconv.Itoa(infra.NumResources())
+}
+
 func (infra *infraImpl) FindById(id string) Resource {
 	return infra.resourcesById[id]
 }
@@ -28,7 +39,7 @@ func (infra *infraImpl) FindByName(name string) Resource {
 	return infra.resourcesByName[name]
 }
 
-func newInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
+func NewInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
 
 	if data == nil {
 		return nil, fmt.Errorf("terraform state is nil")
@@ -57,8 +68,8 @@ func newInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
 
 }
 
-func newInfra(data *tf.State) (Infra, error) {
-	return newInfraWithTracer(data, nil)
+func NewInfra(data *tf.State) (Infra, error) {
+	return NewInfraWithTracer(data, nil)
 }
 
 func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {

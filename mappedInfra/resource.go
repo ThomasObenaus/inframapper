@@ -6,11 +6,8 @@ import (
 )
 
 type MappedResource interface {
-	Aws() (MappedAwsResource, error)
-}
-
-type MappedAwsResource interface {
 	Aws() aws.Resource
+	IsAws() bool
 	HasTerraform() bool
 	Terraform() terraform.Resource
 }
