@@ -33,7 +33,7 @@ func NewInfraWithTracer(mappedResources []MappedResource, tracer trace.Tracer) (
 		tracer = trace.Off()
 	}
 
-	var mappedResourcesById map[string]MappedResource
+	mappedResourcesById := make(map[string]MappedResource)
 	for _, mResource := range mappedResources {
 
 		if !mResource.HasAws() {
@@ -46,7 +46,6 @@ func NewInfraWithTracer(mappedResources []MappedResource, tracer trace.Tracer) (
 			tracer.Trace("Ignore resource (res by id), since id is missing: ", mResource.String())
 			continue
 		}
-
 		mappedResourcesById[mResource.Aws().Id()] = mResource
 	}
 

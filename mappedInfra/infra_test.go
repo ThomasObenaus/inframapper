@@ -18,6 +18,6 @@ func TestNewInfra(t *testing.T) {
 	infra, err := NewInfra(mappedResources)
 	assert.NotNil(t, infra)
 	assert.NoError(t, err)
-	require.Equal(t, 1, infra.Resources())
+	require.Equal(t, 1, len(infra.Resources()))
 	assert.Equal(t, "1234", infra.Resources()[0].Aws().Id())
 }
