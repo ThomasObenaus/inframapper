@@ -119,10 +119,12 @@ func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Res
 		return empty, fmt.Errorf("Data is nil")
 	}
 
-	if len(data.Modules) == 0 {
+	numModules := len(data.Modules)
+	if numModules == 0 {
 		tracer.Trace("No modules given")
 		return empty, nil
 	}
+	tracer.Trace("#Modules=", strconv.Itoa(numModules))
 
 	module := data.Modules[0]
 	resources := module.Resources
