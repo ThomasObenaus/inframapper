@@ -20,21 +20,33 @@ func (m *mapperImpl) String() string {
 	return "MappedInfra"
 }
 
-func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
+func (m *mapperImpl) mapVpcs(vpcs []*aws.Vpc, tf terraform.Infra) []MappedResource {
 	var mappedResources []MappedResource
 	// handle vpcs
-	for _, awsVpc := range aws.Vpcs() {
+	m.tracer.Trace("Map (", len(vpcs), ") vpcs:")
+	for _, awsVpc := range vpcs {
 		if awsVpc == nil {
 			m.tracer.Trace("Ignore vpc which is nil")
 			continue
 		}
 
-		m.tracer.Trace("Map ", awsVpc.String())
 		tfResource := tf.FindById(awsVpc.Id())
-
+		mapFrom := awsVpc.Id()
+		mappedToTf := "N/A"
+		if tfResource != nil {
+			mappedToTf = tfResource.Name()
+		}
+		m.tracer.Trace("\t", mapFrom, "->", mappedToTf)
 		mResource := NewVpc(awsVpc, tfResource)
 		mappedResources = append(mappedResources, mResource)
 	}
+	return mappedResources
+}
+
+func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
+	var mappedResources []MappedResource
+	// handle vpcs
+	mappedResources = append(mappedResources, m.mapVpcs(aws.Vpcs(), tf)...)
 	return NewInfraWithTracer(mappedResources, m.tracer)
 }
 
