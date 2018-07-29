@@ -50,6 +50,9 @@ generate:
 	@mockgen -source=aws/resource.go -destination test/mock_aws/mock_resource.go
 	@mockgen -source=terraform/resource.go -destination test/mock_terraform/mock_resource.go
 	@mockgen -source=terraform/infra.go -destination test/mock_terraform/mock_infra.go
+	@mockgen -source=mappedInfra/infra.go -destination test/mock_mappedInfra/mock_infra.go
+	@mockgen -source=mappedInfra/mapper.go -destination test/mock_mappedInfra/mock_mapper.go
+	@mockgen -source=mappedInfra/resource.go -destination test/mock_mappedInfra/mock_resource.go
 
 run: build
 	@echo "----------------------------------------------------------------------------------"

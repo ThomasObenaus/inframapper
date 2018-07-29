@@ -14,3 +14,5 @@ aws/debug\.test
 debug
 
 terraform/debug\.test
+
+mappedInfra/debug\.test
