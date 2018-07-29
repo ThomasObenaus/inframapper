@@ -72,47 +72,15 @@ func NewInfra(data *tf.State) (Infra, error) {
 	return NewInfraWithTracer(data, nil)
 }
 
-func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+// Type used to define which filter criteria should be used
+type filterCriteria int
 
-	var empty = make(map[string]Resource)
+const (
+	filterCriteria_Id filterCriteria = iota
+	filterCriteria_Name
+)
 
-	if data == nil {
-		return empty, fmt.Errorf("Data is nil")
-	}
-
-	if len(data.Modules) == 0 {
-		tracer.Trace("No modules given")
-		return empty, nil
-	}
-
-	module := data.Modules[0]
-	resources := module.Resources
-	if len(resources) == 0 {
-		tracer.Trace("No resources given")
-		return empty, nil
-	}
-
-	var result = make(map[string]Resource)
-
-	for name, resource := range resources {
-
-		r := &resourceImpl{
-			id:        resource.Primary.ID,
-			rType:     StrToType(resource.Type),
-			name:      name,
-			dependsOn: resource.Dependencies,
-			provider:  resource.Provider,
-		}
-
-		tracer.Trace("Add resource ", r.String())
-		result[r.Name()] = r
-	}
-
-	return result, nil
-}
-
-func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
-
+func createResourcesByXMap(data *tf.State, fCrit filterCriteria, tracer trace.Tracer) (map[string]Resource, error) {
 	var empty = make(map[string]Resource)
 
 	if data == nil {
@@ -126,28 +94,43 @@ func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Res
 	}
 	tracer.Trace("#Modules=", strconv.Itoa(numModules))
 
-	module := data.Modules[0]
-	resources := module.Resources
-	if len(resources) == 0 {
-		tracer.Trace("No resources given")
-		return empty, nil
-	}
-
 	var result = make(map[string]Resource)
-
-	for name, resource := range resources {
-
-		r := &resourceImpl{
-			id:        resource.Primary.ID,
-			rType:     StrToType(resource.Type),
-			name:      name,
-			dependsOn: resource.Dependencies,
-			provider:  resource.Provider,
+	// all modules
+	for idx, module := range data.Modules {
+		resources := module.Resources
+		if len(resources) == 0 {
+			tracer.Trace("No resources given for module ", idx, "/", numModules)
+			continue
 		}
 
-		tracer.Trace("Add resource ", r.String())
-		result[r.Id()] = r
+		// all resources
+		for name, resource := range resources {
+
+			r := &resourceImpl{
+				id:        resource.Primary.ID,
+				rType:     StrToType(resource.Type),
+				name:      name,
+				dependsOn: resource.Dependencies,
+				provider:  resource.Provider,
+			}
+
+			key := name
+			if fCrit == filterCriteria_Id {
+				key = r.Id()
+			}
+
+			tracer.Trace("Add resource ", r.String())
+			result[key] = r
+		}
 	}
 
 	return result, nil
+}
+
+func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+	return createResourcesByXMap(data, filterCriteria_Name, tracer)
+}
+
+func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+	return createResourcesByXMap(data, filterCriteria_Id, tracer)
 }
