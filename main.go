@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/thomas.obenaus/terrastate/aws"
-	"github.com/thomas.obenaus/terrastate/mappedInfra"
-	"github.com/thomas.obenaus/terrastate/terraform"
-	"github.com/thomas.obenaus/terrastate/tfstate"
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/aws"
+	"github.com/thomas.obenaus/inframapper/mappedInfra"
+	"github.com/thomas.obenaus/inframapper/terraform"
+	"github.com/thomas.obenaus/inframapper/tfstate"
+	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 func main() {

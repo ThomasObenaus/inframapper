@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 type InfraLoader interface {

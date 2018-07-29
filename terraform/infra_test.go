@@ -7,7 +7,7 @@ import (
 	terraform "github.com/hashicorp/terraform/terraform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 var vpc = `{

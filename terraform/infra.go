@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	tf "github.com/hashicorp/terraform/terraform"
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 type Infra interface {

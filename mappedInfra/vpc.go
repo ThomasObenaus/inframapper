@@ -1,8 +1,8 @@
 package mappedInfra
 
 import (
-	"github.com/thomas.obenaus/terrastate/aws"
-	"github.com/thomas.obenaus/terrastate/terraform"
+	"github.com/thomas.obenaus/inframapper/aws"
+	"github.com/thomas.obenaus/inframapper/terraform"
 )
 
 type vpc struct {

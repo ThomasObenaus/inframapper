@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 type Infra interface {

@@ -1,10 +1,10 @@
 package mappedInfra
 
 import (
-	"github.com/thomas.obenaus/terrastate/terraform"
-	"github.com/thomas.obenaus/terrastate/trace"
+	"github.com/thomas.obenaus/inframapper/terraform"
+	"github.com/thomas.obenaus/inframapper/trace"
 
-	"github.com/thomas.obenaus/terrastate/aws"
+	"github.com/thomas.obenaus/inframapper/aws"
 )
 
 type Mapper interface {
