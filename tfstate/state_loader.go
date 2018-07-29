@@ -4,12 +4,20 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	terraform "github.com/hashicorp/terraform/terraform"
 	"github.com/thomas.obenaus/inframapper/trace"
 )
 
 type StateLoader interface {
+	// Load loads a terraform state file
 	Load(filename string) (*terraform.State, error)
+
+	// LoadRemoteState loads state from an aws S3 bucket
+	LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error)
 }
 
 type tfStateLoader struct {
@@ -21,6 +29,49 @@ func (sl *tfStateLoader) Validate() error {
 		return fmt.Errorf("Tracer is nil")
 	}
 	return nil
+}
+
+func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error) {
+
+	tfStateList := make([]*terraform.State, 0)
+
+	// create session
+	verboseCredErrors := true
+	cfg := aws.Config{Region: aws.String(remoteCfg.Region), CredentialsChainVerboseErrors: &verboseCredErrors}
+	sessionOpts := session.Options{Profile: remoteCfg.Profile, Config: cfg}
+	session, err := session.NewSessionWithOptions(sessionOpts)
+	if err != nil {
+		return tfStateList, err
+	}
+
+	// Create a downloader with the session and default options
+	downloader := s3manager.NewDownloader(session)
+
+	for _, key := range remoteCfg.Keys {
+		var buffer []byte
+		wBuffer := aws.NewWriteAtBuffer(buffer)
+		stateFile := remoteCfg.BucketName + "/" + key
+		sl.tracer.Trace("Loading ", stateFile, "...")
+
+		// Write the contents of S3 Object to the buffer
+		nBytes, err := downloader.Download(wBuffer, &s3.GetObjectInput{
+			Bucket: aws.String(remoteCfg.BucketName),
+			Key:    aws.String(key),
+		})
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to download state-file '%s', %v", stateFile, err)
+		}
+		sl.tracer.Trace("Loading ", stateFile, " ", nBytes, " B...done")
+
+		tfState, err := Parse(wBuffer.Bytes())
+		if err != nil {
+			return nil, err
+		}
+		tfStateList = append(tfStateList, tfState)
+	}
+
+	return tfStateList, nil
 }
 
 func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {

@@ -13,9 +13,10 @@ import (
 
 func main() {
 
-	profile := "playground"
+	profile := "develop"
 	region := "eu-central-1"
 	tracer := trace.New(os.Stdout)
+	tracerOff := trace.Off()
 
 	awsInfraLoader, err := aws.NewInfraLoaderWithTracer(profile, region, tracer)
 	if err != nil {
@@ -30,12 +31,27 @@ func main() {
 	tracer.Trace("AWS Infra: ", awsInfra)
 
 	tfStateLoader := tfstate.NewStateLoaderWithTracer(tracer)
-	tfState, err := tfStateLoader.Load("examples/statefiles/instance.tfstate")
+	_, err = tfStateLoader.Load("examples/statefiles/instance.tfstate")
 	if err != nil {
 		log.Fatalf("Error loading terraform state: %s", err.Error())
 	}
 
-	tfInfra, err := terraform.NewInfraWithTracer(tfState, tracer)
+	keys := make([]string, 2)
+	keys[0] = "snapshot/base/networking/terraform.tfstate"
+	keys[1] = "snapshot/base/common/terraform.tfstate"
+	remoteCfg := tfstate.RemoteConfig{
+		BucketName: "741125603121-tfstate",
+		Keys:       keys,
+		Profile:    "shared",
+		Region:     "eu-central-1",
+	}
+
+	tfStateList, err := tfStateLoader.LoadRemoteState(remoteCfg)
+	if err != nil {
+		log.Fatalf("Error loading remote terraform state: %s", err.Error())
+	}
+
+	tfInfra, err := terraform.NewInfraWithTracer(tfStateList, tracerOff)
 	if err != nil {
 		log.Fatalf("Error loading terraform infrastructure: %s", err.Error())
 	}

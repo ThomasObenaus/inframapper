@@ -27,51 +27,82 @@ var vpc = `{
 }
 `
 
+var multiVpc = `{
+	"modules": [ {
+			"resources": {
+				"aws_vpc.default": {
+					"type": "aws_vpc",
+					"depends_on": ["bla","blubb"],
+					"primary": {
+							"id": "vpc-ff5fec97"
+					},
+					"provider": "provider.aws"
+				}
+			}
+		}, {
+			"resources": {
+				"aws_vpc.important": {
+					"type": "aws_vpc",
+					"depends_on": ["foo","bar"],
+					"primary": {
+							"id": "vpc-fa697123"
+					},
+					"provider": "provider.aws"
+				}
+			}
+		}
+	]
+}
+`
+
 func TestNew(t *testing.T) {
 
 	infra, err := NewInfra(nil)
 	assert.Nil(t, infra)
 	assert.Error(t, err)
 
-	tfstate := &terraform.State{}
-	infra, err = NewInfra(tfstate)
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	infra, err = NewInfra(tfStateList)
 	assert.NotNil(t, infra)
 	assert.NoError(t, err)
 }
 
 func TestCreateResourcesByIdMap(t *testing.T) {
-
 	tracer := trace.Off()
 
-	resourcesById, err := createResourcesByIdMap(nil, tracer)
-	assert.Empty(t, resourcesById)
-	assert.Error(t, err)
-
 	tfstate := &terraform.State{}
-	resourcesById, err = createResourcesByIdMap(tfstate, tracer)
-	assert.Empty(t, resourcesById)
-	assert.NoError(t, err)
-
-	tfstate = &terraform.State{}
-	err = json.Unmarshal([]byte(vpc), tfstate)
+	err := json.Unmarshal([]byte(vpc), tfstate)
 	require.NoError(t, err)
 
-	resourcesById, err = createResourcesByIdMap(tfstate, tracer)
+	resourcesById, err := createResourcesByIdMap(tfstate, tracer)
 	assert.NotEmpty(t, resourcesById)
 	assert.NoError(t, err)
 	assert.NotNil(t, resourcesById["vpc-ff5fec97"])
 }
 
 func TestCreateResourcesByNameMap(t *testing.T) {
-
 	tracer := trace.Off()
 
-	resourcesByName, err := createResourcesByNameMap(nil, tracer)
+	tfstate := &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfstate)
+	require.NoError(t, err)
+
+	resourcesById, err := createResourcesByNameMap(tfstate, tracer)
+	assert.NotEmpty(t, resourcesById)
+	assert.NoError(t, err)
+	assert.NotNil(t, resourcesById["aws_vpc.default"])
+}
+
+func TestCreateResourcesByXMap(t *testing.T) {
+	tracer := trace.Off()
+
+	resourcesByName, err := createResourcesByXMap(nil, filterCriteria_Name, tracer)
 	assert.Empty(t, resourcesByName)
 	assert.Error(t, err)
 
 	tfstate := &terraform.State{}
-	resourcesByName, err = createResourcesByNameMap(tfstate, tracer)
+	resourcesByName, err = createResourcesByXMap(tfstate, filterCriteria_Name, tracer)
 	assert.Empty(t, resourcesByName)
 	assert.NoError(t, err)
 
@@ -79,18 +110,36 @@ func TestCreateResourcesByNameMap(t *testing.T) {
 	err = json.Unmarshal([]byte(vpc), tfstate)
 	require.NoError(t, err)
 
-	resourcesByName, err = createResourcesByNameMap(tfstate, tracer)
+	resourcesByName, err = createResourcesByXMap(tfstate, filterCriteria_Name, tracer)
 	assert.NotEmpty(t, resourcesByName)
 	assert.NoError(t, err)
 	assert.NotNil(t, resourcesByName["aws_vpc.default"])
+
+	tfstate = &terraform.State{}
+	err = json.Unmarshal([]byte(multiVpc), tfstate)
+	require.NoError(t, err)
+
+	resourcesByName, err = createResourcesByXMap(tfstate, filterCriteria_Name, tracer)
+	assert.NotEmpty(t, resourcesByName)
+	assert.NoError(t, err)
+	assert.NotNil(t, resourcesByName["aws_vpc.default"])
+	assert.NotNil(t, resourcesByName["aws_vpc.important"])
+
+	resourcesByName, err = createResourcesByXMap(tfstate, filterCriteria_Id, tracer)
+	assert.NotEmpty(t, resourcesByName)
+	assert.NoError(t, err)
+	assert.NotNil(t, resourcesByName["vpc-ff5fec97"])
+	assert.NotNil(t, resourcesByName["vpc-fa697123"])
 }
 
 func TestFindResourceByName(t *testing.T) {
-	tfstate := &terraform.State{}
-	err := json.Unmarshal([]byte(vpc), tfstate)
+
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfStateList[0])
 	require.NoError(t, err)
 
-	infra, err := NewInfra(tfstate)
+	infra, err := NewInfra(tfStateList)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 
@@ -100,11 +149,12 @@ func TestFindResourceByName(t *testing.T) {
 }
 
 func TestFindResourceById(t *testing.T) {
-	tfstate := &terraform.State{}
-	err := json.Unmarshal([]byte(vpc), tfstate)
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfStateList[0])
 	require.NoError(t, err)
 
-	infra, err := NewInfra(tfstate)
+	infra, err := NewInfra(tfStateList)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 
