@@ -16,9 +16,7 @@ type Infra interface {
 }
 
 type infraImpl struct {
-	tracer trace.Tracer
-
-	data            *tf.State
+	tracer          trace.Tracer
 	resourcesById   map[string]Resource
 	resourcesByName map[string]Resource
 }
@@ -39,7 +37,7 @@ func (infra *infraImpl) FindByName(name string) Resource {
 	return infra.resourcesByName[name]
 }
 
-func NewInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
+func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 
 	if data == nil {
 		return nil, fmt.Errorf("terraform state is nil")
@@ -49,26 +47,34 @@ func NewInfraWithTracer(data *tf.State, tracer trace.Tracer) (Infra, error) {
 		tracer = trace.Off()
 	}
 
-	resourcesById, err := createResourcesByIdMap(data, tracer)
-	if err != nil {
-		return nil, err
-	}
+	resourcesById := make(map[string]Resource)
+	resourcesByName := make(map[string]Resource)
 
-	resourcesByName, err := createResourcesByNameMap(data, tracer)
-	if err != nil {
-		return nil, err
+	for _, tfState := range data {
+		rById, err := createResourcesByIdMap(tfState, tracer)
+		if err != nil {
+			tracer.Trace("Error creating resourceByIdMap. Will skip. Err: ", err.Error())
+		} else {
+			resourcesById = mergeResourceMaps(resourcesById, rById)
+		}
+
+		rByName, err := createResourcesByNameMap(tfState, tracer)
+		if err != nil {
+			tracer.Trace("Error creating resourceByNameMap. Will skip. Err: ", err.Error())
+		} else {
+			resourcesByName = mergeResourceMaps(resourcesByName, rByName)
+		}
 	}
 
 	return &infraImpl{
 		tracer:          tracer,
-		data:            data,
 		resourcesById:   resourcesById,
 		resourcesByName: resourcesByName,
 	}, nil
 
 }
 
-func NewInfra(data *tf.State) (Infra, error) {
+func NewInfra(data []*tf.State) (Infra, error) {
 	return NewInfraWithTracer(data, nil)
 }
 
@@ -133,4 +139,11 @@ func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]R
 
 func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
 	return createResourcesByXMap(data, filterCriteria_Id, tracer)
+}
+
+func mergeResourceMaps(map1 map[string]Resource, map2 map[string]Resource) map[string]Resource {
+	for k, v := range map2 {
+		map1[k] = v
+	}
+	return map1
 }

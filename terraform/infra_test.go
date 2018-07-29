@@ -61,8 +61,9 @@ func TestNew(t *testing.T) {
 	assert.Nil(t, infra)
 	assert.Error(t, err)
 
-	tfstate := &terraform.State{}
-	infra, err = NewInfra(tfstate)
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	infra, err = NewInfra(tfStateList)
 	assert.NotNil(t, infra)
 	assert.NoError(t, err)
 }
@@ -132,11 +133,13 @@ func TestCreateResourcesByXMap(t *testing.T) {
 }
 
 func TestFindResourceByName(t *testing.T) {
-	tfstate := &terraform.State{}
-	err := json.Unmarshal([]byte(vpc), tfstate)
+
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfStateList[0])
 	require.NoError(t, err)
 
-	infra, err := NewInfra(tfstate)
+	infra, err := NewInfra(tfStateList)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 
@@ -146,11 +149,12 @@ func TestFindResourceByName(t *testing.T) {
 }
 
 func TestFindResourceById(t *testing.T) {
-	tfstate := &terraform.State{}
-	err := json.Unmarshal([]byte(vpc), tfstate)
+	tfStateList := make([]*terraform.State, 1)
+	tfStateList[0] = &terraform.State{}
+	err := json.Unmarshal([]byte(vpc), tfStateList[0])
 	require.NoError(t, err)
 
-	infra, err := NewInfra(tfstate)
+	infra, err := NewInfra(tfStateList)
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 

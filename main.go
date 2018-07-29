@@ -16,6 +16,7 @@ func main() {
 	profile := "develop"
 	region := "eu-central-1"
 	tracer := trace.New(os.Stdout)
+	tracerOff := trace.Off()
 
 	awsInfraLoader, err := aws.NewInfraLoaderWithTracer(profile, region, tracer)
 	if err != nil {
@@ -50,7 +51,7 @@ func main() {
 		log.Fatalf("Error loading remote terraform state: %s", err.Error())
 	}
 
-	tfInfra, err := terraform.NewInfraWithTracer(tfStateList[0], tracer)
+	tfInfra, err := terraform.NewInfraWithTracer(tfStateList, tracerOff)
 	if err != nil {
 		log.Fatalf("Error loading terraform infrastructure: %s", err.Error())
 	}

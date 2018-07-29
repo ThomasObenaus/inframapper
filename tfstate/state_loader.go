@@ -3,7 +3,6 @@ package tfstate
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -47,29 +46,28 @@ func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.S
 
 	// Create a downloader with the session and default options
 	downloader := s3manager.NewDownloader(session)
-	var buffer []byte
-	wBuffer := aws.NewWriteAtBuffer(buffer)
 
 	for _, key := range remoteCfg.Keys {
-		log.Printf("bucket: %s", remoteCfg.BucketName)
-		log.Printf("key: %s", key)
+		var buffer []byte
+		wBuffer := aws.NewWriteAtBuffer(buffer)
+		stateFile := remoteCfg.BucketName + "/" + key
+		sl.tracer.Trace("Loading ", stateFile, "...")
 
-		// Write the contents of S3 Object to the file
-		n, err := downloader.Download(wBuffer, &s3.GetObjectInput{
+		// Write the contents of S3 Object to the buffer
+		nBytes, err := downloader.Download(wBuffer, &s3.GetObjectInput{
 			Bucket: aws.String(remoteCfg.BucketName),
-			Key:    aws.String(remoteCfg.Keys[0]),
+			Key:    aws.String(key),
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("Failed to download state-file, %v", err)
+			return nil, fmt.Errorf("Failed to download state-file '%s', %v", stateFile, err)
 		}
+		sl.tracer.Trace("Loading ", stateFile, " ", nBytes, " B...done")
 
-		fmt.Printf("file downloaded, %d bytes\n", n)
 		tfState, err := Parse(wBuffer.Bytes())
 		if err != nil {
 			return nil, err
 		}
-
 		tfStateList = append(tfStateList, tfState)
 	}
 
