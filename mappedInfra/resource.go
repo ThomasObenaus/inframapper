@@ -11,6 +11,7 @@ type MappedResource interface {
 	HasTerraform() bool
 	Terraform() terraform.Resource
 	ResourceType() Type
+	String() string
 }
 
 // Type represents the type of an aws resource

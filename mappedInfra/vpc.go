@@ -27,7 +27,7 @@ func (v *vpc) String() string {
 }
 
 func (v *vpc) Aws() aws.Resource {
-	return v
+	return v.awsVpc
 }
 
 func (v *vpc) HasAws() bool {
