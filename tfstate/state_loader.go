@@ -9,16 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	terraform "github.com/hashicorp/terraform/terraform"
+	"github.com/thomas.obenaus/inframapper/tfstate/tfstate_iface"
 	"github.com/thomas.obenaus/inframapper/trace"
 )
-
-type StateLoader interface {
-	// Load loads a terraform state file
-	Load(filename string) (*terraform.State, error)
-
-	// LoadRemoteState loads state from an aws S3 bucket
-	LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error)
-}
 
 type tfStateLoader struct {
 	tracer trace.Tracer
@@ -31,21 +24,9 @@ func (sl *tfStateLoader) Validate() error {
 	return nil
 }
 
-func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error) {
+func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg tfstate_iface.RemoteConfig, downloader tfstate_iface.S3DownloaderAPI) ([]*terraform.State, error) {
 
 	tfStateList := make([]*terraform.State, 0)
-
-	// create session
-	verboseCredErrors := true
-	cfg := aws.Config{Region: aws.String(remoteCfg.Region), CredentialsChainVerboseErrors: &verboseCredErrors}
-	sessionOpts := session.Options{Profile: remoteCfg.Profile, Config: cfg}
-	session, err := session.NewSessionWithOptions(sessionOpts)
-	if err != nil {
-		return tfStateList, err
-	}
-
-	// Create a downloader with the session and default options
-	downloader := s3manager.NewDownloader(session)
 
 	for _, key := range remoteCfg.Keys {
 		var buffer []byte
@@ -72,6 +53,25 @@ func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.S
 	}
 
 	return tfStateList, nil
+
+}
+func (sl *tfStateLoader) LoadRemoteState(remoteCfg tfstate_iface.RemoteConfig) ([]*terraform.State, error) {
+
+	emptyList := make([]*terraform.State, 0)
+
+	// create session
+	verboseCredErrors := true
+	cfg := aws.Config{Region: aws.String(remoteCfg.Region), CredentialsChainVerboseErrors: &verboseCredErrors}
+	sessionOpts := session.Options{Profile: remoteCfg.Profile, Config: cfg}
+	session, err := session.NewSessionWithOptions(sessionOpts)
+	if err != nil {
+		return emptyList, err
+	}
+
+	// Create a downloader with the session and default options
+	downloader := s3manager.NewDownloader(session)
+
+	return sl.loadRemoteStateImpl(remoteCfg, downloader)
 }
 
 func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
@@ -95,12 +95,12 @@ func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
 }
 
 // NewStateLoader creates a new instance of a StateLoader without tracing
-func NewStateLoader() StateLoader {
+func NewStateLoader() tfstate_iface.StateLoader {
 	return NewStateLoaderWithTracer(nil)
 }
 
 // NewStateLoaderWithTracer creates a new instance of a StateLoader with tracing
-func NewStateLoaderWithTracer(tracer trace.Tracer) StateLoader {
+func NewStateLoaderWithTracer(tracer trace.Tracer) tfstate_iface.StateLoader {
 	if tracer == nil {
 		tracer = trace.Off()
 	}

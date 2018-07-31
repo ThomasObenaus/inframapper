@@ -16,3 +16,5 @@ debug
 terraform/debug\.test
 
 mappedInfra/debug\.test
+
+tfstate/debug\.test
