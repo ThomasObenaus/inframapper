@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	terraform "github.com/hashicorp/terraform/terraform"
-	"github.com/thomas.obenaus/inframapper/tfstate/tfstate_iface"
+	"github.com/thomas.obenaus/inframapper/tfstate/iface"
 	"github.com/thomas.obenaus/inframapper/trace"
 )
 
@@ -24,7 +24,7 @@ func (sl *tfStateLoader) Validate() error {
 	return nil
 }
 
-func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg tfstate_iface.RemoteConfig, downloader tfstate_iface.S3DownloaderAPI) ([]*terraform.State, error) {
+func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg iface.RemoteConfig, downloader iface.S3DownloaderAPI) ([]*terraform.State, error) {
 
 	tfStateList := make([]*terraform.State, 0)
 
@@ -55,7 +55,7 @@ func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg tfstate_iface.RemoteConfi
 	return tfStateList, nil
 
 }
-func (sl *tfStateLoader) LoadRemoteState(remoteCfg tfstate_iface.RemoteConfig) ([]*terraform.State, error) {
+func (sl *tfStateLoader) LoadRemoteState(remoteCfg iface.RemoteConfig) ([]*terraform.State, error) {
 
 	emptyList := make([]*terraform.State, 0)
 
@@ -95,12 +95,12 @@ func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
 }
 
 // NewStateLoader creates a new instance of a StateLoader without tracing
-func NewStateLoader() tfstate_iface.StateLoader {
+func NewStateLoader() iface.StateLoader {
 	return NewStateLoaderWithTracer(nil)
 }
 
 // NewStateLoaderWithTracer creates a new instance of a StateLoader with tracing
-func NewStateLoaderWithTracer(tracer trace.Tracer) tfstate_iface.StateLoader {
+func NewStateLoaderWithTracer(tracer trace.Tracer) iface.StateLoader {
 	if tracer == nil {
 		tracer = trace.Off()
 	}

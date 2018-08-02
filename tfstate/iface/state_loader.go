@@ -1,4 +1,4 @@
-package tfstate_iface
+package iface
 
 import (
 	"github.com/hashicorp/terraform/terraform"
