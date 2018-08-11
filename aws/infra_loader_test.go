@@ -30,7 +30,7 @@ func TestRLLoad(t *testing.T) {
 	session, err := newAWSSession("blubb", "bla")
 	require.Nil(t, err)
 	require.NotNil(t, session)
-	rl = infraLoaderImpl{session: session}
+	rl := infraLoaderImpl{session: session}
 	err = rl.Validate()
 	assert.NotNil(t, err)
 }
