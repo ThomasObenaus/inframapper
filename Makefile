@@ -1,16 +1,16 @@
 .DEFAULT_GOAL				:= all
-name 								:= "terrastate"
+name 								:= "inframapper"
 
 all: vendor build cover finish
 
 .PHONY: test
-test: generate
+test: generate.mocks
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests"
 	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -v
 
 .PHONY: cover
-cover: generate
+cover: generate.mocks
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
 	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -cover -v
@@ -45,11 +45,13 @@ generate:
 	@stringer -type=Type terraform
 	@stringer -type=Type aws
 	@stringer -type=Type mappedInfra
-	
+
+generate.mocks:
+	@echo "----------------------------------------------------------------------------------"
 	@echo "--> generate mocks (github.com/golang/mock/gomock is required for this)"
 	@go get github.com/golang/mock/gomock
 	@go install github.com/golang/mock/mockgen
-	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go
+	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go 
 	@mockgen -source=aws/infra.go -destination test/mock_aws/mock_infra.go
 	@mockgen -source=aws/resource.go -destination test/mock_aws/mock_resource.go
 	@mockgen -source=terraform/resource.go -destination test/mock_terraform/mock_resource.go
