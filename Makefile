@@ -1,7 +1,7 @@
 .DEFAULT_GOAL				:= all
 name 								:= "terrastate"
 
-all: vendor build cover run finish
+all: vendor build cover finish
 
 .PHONY: test
 test: generate
