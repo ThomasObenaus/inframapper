@@ -5,9 +5,17 @@ import (
 	"log"
 	"testing"
 
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/thomasobenaus/inframapper/trace"
 )
+
+type mockEC2IF struct {
+}
+
+func (m *mockEC2IF) DescribeVpcs(input *ec2.DescribeVpcsInput) (*ec2.DescribeVpcsOutput, error) {
+	return nil, fmt.Errorf("N/A")
+}
 
 func TestRLNew(t *testing.T) {
 
@@ -22,33 +30,24 @@ func TestRLNew(t *testing.T) {
 
 func TestRLLoad(t *testing.T) {
 
-	sl, err := NewInfraLoader("unknown", "unknown")
-	require.Nil(t, err)
-	require.NotNil(t, sl)
-	infra, err := sl.Load()
-	assert.Error(t, err)
-	assert.Nil(t, infra)
+	loader := infraLoaderImpl{
+		tracer: trace.Off(),
+		ec2IF:  &mockEC2IF{},
+	}
 
-	session, err := newAWSSession("blubb", "bla")
-	require.Nil(t, err)
-	require.NotNil(t, session)
-	rl := infraLoaderImpl{session: session}
-	err = rl.Validate()
-	assert.NotNil(t, err)
+	infra, err := loader.Load()
+	assert.NoError(t, err)
+	assert.NotNil(t, infra)
 }
 
 func TestValidate(t *testing.T) {
 	rl := infraLoaderImpl{}
 	err := rl.Validate()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 
-	session, err := newAWSSession("blubb", "bla")
-	require.Nil(t, err)
-	require.NotNil(t, session)
-	rl = infraLoaderImpl{session: session}
+	rl = infraLoaderImpl{tracer: trace.Off()}
 	err = rl.Validate()
-	assert.NotNil(t, err)
-
+	assert.NoError(t, err)
 }
 
 func ExampleNewInfraLoader() {

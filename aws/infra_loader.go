@@ -3,7 +3,6 @@ package aws
 import (
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/thomasobenaus/inframapper/trace"
 )
@@ -13,11 +12,11 @@ type InfraLoader interface {
 }
 
 type infraLoaderImpl struct {
-	session    *session.Session
 	tracer     trace.Tracer
 	awsProfile string
 	awsRegion  string
-	infra      Infra
+
+	ec2IF EC2IF
 }
 
 func (sl *infraLoaderImpl) Load() (Infra, error) {
@@ -28,10 +27,9 @@ func (sl *infraLoaderImpl) Load() (Infra, error) {
 
 	// VPC - section
 	sl.tracer.Trace("Load vpcs ...")
-	svc := ec2.New(sl.session)
-	vpcs, err := LoadVpcs(svc, sl.tracer)
+	vpcs, err := LoadVpcs(sl.ec2IF, sl.tracer)
 	if err != nil {
-		return nil, err
+		sl.tracer.Trace("Error loading vpcs: ", err.Error())
 	}
 	sl.tracer.Trace("Load vpcs (", len(vpcs), ")...done")
 
@@ -48,10 +46,6 @@ func (sl *infraLoaderImpl) Load() (Infra, error) {
 
 // Validate if the preconditions to load the infrastructure are met
 func (sl *infraLoaderImpl) Validate() error {
-	if sl.session == nil {
-		return fmt.Errorf("Session is nil")
-	}
-
 	if sl.tracer == nil {
 		return fmt.Errorf("Tracer is nil")
 	}
@@ -88,10 +82,11 @@ func NewInfraLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.
 	}
 
 	resourdeLoader := &infraLoaderImpl{
-		session:    sess,
 		tracer:     tracer,
 		awsProfile: awsProfile,
 		awsRegion:  awsRegion,
+
+		ec2IF: ec2.New(sess),
 	}
 
 	return resourdeLoader, nil
