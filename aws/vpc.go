@@ -3,12 +3,17 @@ package aws
 import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/thomasobenaus/inframapper/helper"
+	"github.com/thomasobenaus/inframapper/trace"
 )
 
 type Vpc struct {
 	VpcId        string
 	IsDefaultVPC bool
 	CIDR         string
+}
+
+type VpcLoader interface {
+	DescribeVpcs(input *ec2.DescribeVpcsInput) (*ec2.DescribeVpcsOutput, error)
 }
 
 func (vpc *Vpc) Id() string {
@@ -29,16 +34,9 @@ func (vpc *Vpc) String() string {
 	return result
 }
 
-func (sl *infraLoaderImpl) loadVpcs() ([]*Vpc, error) {
-
-	if err := sl.Validate(); err != nil {
-		return nil, err
-	}
-
-	// load vpc data
-	svc := ec2.New(sl.session)
+func LoadVpcs(loader VpcLoader, tracer trace.Tracer) ([]*Vpc, error) {
 	inDesc := &ec2.DescribeVpcsInput{DryRun: helper.NewFalse()}
-	outDesc, err := svc.DescribeVpcs(inDesc)
+	outDesc, err := loader.DescribeVpcs(inDesc)
 
 	if err != nil {
 		return nil, err
@@ -49,7 +47,7 @@ func (sl *infraLoaderImpl) loadVpcs() ([]*Vpc, error) {
 	for _, vpc := range outDesc.Vpcs {
 
 		if vpc == nil {
-			sl.tracer.Trace("Got nil vpc, ignore it.")
+			tracer.Trace("Got nil vpc, ignore it.")
 			continue
 		}
 

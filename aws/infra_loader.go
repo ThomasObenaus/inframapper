@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
@@ -27,7 +28,8 @@ func (sl *infraLoaderImpl) Load() (Infra, error) {
 
 	// VPC - section
 	sl.tracer.Trace("Load vpcs ...")
-	vpcs, err := sl.loadVpcs()
+	svc := ec2.New(sl.session)
+	vpcs, err := LoadVpcs(svc, sl.tracer)
 	if err != nil {
 		return nil, err
 	}
