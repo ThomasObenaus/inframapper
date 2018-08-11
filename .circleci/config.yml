@@ -24,4 +24,6 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get golang.org/x/tools/cmd/stringer
       - run: go get github.com/golang/mock/gomock
+      - run: which stringer
+      - run: which mockgen
       - run: make all
