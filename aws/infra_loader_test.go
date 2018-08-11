@@ -10,11 +10,8 @@ import (
 )
 
 func TestRLNew(t *testing.T) {
-	sl, err := NewInfraLoader("playground", "eu-central-1")
-	assert.NotNil(t, sl)
-	assert.Nil(t, err)
 
-	sl, err = NewInfraLoader("", "")
+	sl, err := NewInfraLoader("", "")
 	assert.NotNil(t, err)
 	assert.Nil(t, sl)
 
@@ -24,12 +21,8 @@ func TestRLNew(t *testing.T) {
 }
 
 func TestRLLoad(t *testing.T) {
-	sl, err := NewInfraLoader("playground", "eu-central-1")
-	require.Nil(t, err)
-	require.NotNil(t, sl)
-	assert.Nil(t, sl.Load())
 
-	sl, err = NewInfraLoader("unknown", "unknown")
+	sl, err := NewInfraLoader("unknown", "unknown")
 	require.Nil(t, err)
 	require.NotNil(t, sl)
 	assert.NotNil(t, sl.Load())
