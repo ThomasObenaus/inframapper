@@ -40,16 +40,6 @@ func TestRLLoad(t *testing.T) {
 	assert.NotNil(t, infra)
 }
 
-func TestValidate(t *testing.T) {
-	rl := infraLoaderImpl{}
-	err := rl.Validate()
-	assert.Error(t, err)
-
-	rl = infraLoaderImpl{tracer: trace.Off()}
-	err = rl.Validate()
-	assert.NoError(t, err)
-}
-
 func ExampleNewInfraLoader() {
 	iLoader, err := NewInfraLoader("playground", "eu-central-1")
 	if err != nil {

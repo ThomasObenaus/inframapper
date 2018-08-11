@@ -20,11 +20,6 @@ type infraLoaderImpl struct {
 }
 
 func (sl *infraLoaderImpl) Load() (Infra, error) {
-
-	if err := sl.Validate(); err != nil {
-		return nil, err
-	}
-
 	// VPC - section
 	sl.tracer.Trace("Load vpcs ...")
 	vpcs, err := LoadVpcs(sl.ec2IF, sl.tracer)
@@ -42,14 +37,6 @@ func (sl *infraLoaderImpl) Load() (Infra, error) {
 
 	// create the infra
 	return newInfraWithTracer(infraData, sl.tracer)
-}
-
-// Validate if the preconditions to load the infrastructure are met
-func (sl *infraLoaderImpl) Validate() error {
-	if sl.tracer == nil {
-		return fmt.Errorf("Tracer is nil")
-	}
-	return nil
 }
 
 // NewInfraLoader creates a InfraLoader instance
