@@ -24,18 +24,18 @@ func TestLoadVPCFail(t *testing.T) {
 
 }
 
-//func TestLoadVPC(t *testing.T) {
-//	sess, err := newAWSSession("playground", "eu-central-1")
-//	require.NotNil(t, sess)
-//	require.Nil(t, err)
-//
-//	sl := infraLoaderImpl{
-//		session: sess,
-//		tracer:  trace.Off(),
-//	}
-//
-//	vpcs, err := sl.loadVpcs()
-//	assert.NotNil(t, vpcs)
-//	assert.Nil(t, err)
-//
-//}
+func TestLoadVPC(t *testing.T) {
+	sess, err := newAWSSession("playground", "eu-central-1")
+	require.NotNil(t, sess)
+	require.Nil(t, err)
+
+	sl := infraLoaderImpl{
+		session: sess,
+		tracer:  trace.Off(),
+	}
+
+	vpcs, err := sl.loadVpcs()
+	assert.NotNil(t, vpcs)
+	assert.Nil(t, err)
+
+}
