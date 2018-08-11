@@ -10,11 +10,8 @@ import (
 )
 
 func TestRLNew(t *testing.T) {
-	sl, err := NewInfraLoader("playground", "eu-central-1")
-	assert.NotNil(t, sl)
-	assert.Nil(t, err)
 
-	sl, err = NewInfraLoader("", "")
+	sl, err := NewInfraLoader("", "")
 	assert.NotNil(t, err)
 	assert.Nil(t, sl)
 
@@ -24,16 +21,20 @@ func TestRLNew(t *testing.T) {
 }
 
 func TestRLLoad(t *testing.T) {
-	sl, err := NewInfraLoader("playground", "eu-central-1")
+
+	sl, err := NewInfraLoader("unknown", "unknown")
 	require.Nil(t, err)
 	require.NotNil(t, sl)
-	assert.Nil(t, sl.Load())
+	infra, err := sl.Load()
+	assert.Error(t, err)
+	assert.Nil(t, infra)
 
-	sl, err = NewInfraLoader("unknown", "unknown")
+	session, err := newAWSSession("blubb", "bla")
 	require.Nil(t, err)
-	require.NotNil(t, sl)
-	assert.NotNil(t, sl.Load())
-
+	require.NotNil(t, session)
+	rl := infraLoaderImpl{session: session}
+	err = rl.Validate()
+	assert.NotNil(t, err)
 }
 
 func TestValidate(t *testing.T) {
@@ -53,17 +54,12 @@ func TestValidate(t *testing.T) {
 func ExampleNewInfraLoader() {
 	iLoader, err := NewInfraLoader("playground", "eu-central-1")
 	if err != nil {
-		log.Fatalf("Error, creatging infra-loader: %s", err.Error())
+		log.Fatalf("Error, creating infra-loader: %s", err.Error())
 	}
 
-	if err := iLoader.Load(); err != nil {
+	infra, err := iLoader.Load()
+	if err != nil {
 		log.Fatalf("Error, loading infra: %s", err.Error())
 	}
-
-	infra := iLoader.GetLoadedInfra()
-	if infra == nil {
-		log.Fatalf("Error, obtaining loaded infra: %s", err.Error())
-	}
-
 	fmt.Println(infra.String())
 }

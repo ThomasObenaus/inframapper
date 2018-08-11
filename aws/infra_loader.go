@@ -8,8 +8,7 @@ import (
 )
 
 type InfraLoader interface {
-	Load() error
-	GetLoadedInfra() Infra
+	Load() (Infra, error)
 }
 
 type infraLoaderImpl struct {
@@ -20,17 +19,17 @@ type infraLoaderImpl struct {
 	infra      Infra
 }
 
-func (sl *infraLoaderImpl) Load() error {
+func (sl *infraLoaderImpl) Load() (Infra, error) {
 
 	if err := sl.Validate(); err != nil {
-		return err
+		return nil, err
 	}
 
 	// VPC - section
 	sl.tracer.Trace("Load vpcs ...")
 	vpcs, err := sl.loadVpcs()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	sl.tracer.Trace("Load vpcs (", len(vpcs), ")...done")
 
@@ -42,18 +41,7 @@ func (sl *infraLoaderImpl) Load() error {
 	}
 
 	// create the infra
-	sl.tracer.Trace("Create aws infra ...")
-	sl.infra, err = newInfraWithTracer(infraData, sl.tracer)
-	if err != nil {
-		return err
-	}
-	sl.tracer.Trace("Create aws infra ...done.")
-
-	return nil
-}
-
-func (sl *infraLoaderImpl) GetLoadedInfra() Infra {
-	return sl.infra
+	return newInfraWithTracer(infraData, sl.tracer)
 }
 
 // Validate if the preconditions to load the infrastructure are met
