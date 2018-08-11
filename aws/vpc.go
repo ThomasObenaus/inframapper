@@ -2,6 +2,7 @@ package aws
 
 import (
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/thomasobenaus/inframapper/aws/iface"
 	"github.com/thomasobenaus/inframapper/helper"
 	"github.com/thomasobenaus/inframapper/trace"
 )
@@ -34,7 +35,7 @@ func (vpc *Vpc) String() string {
 	return result
 }
 
-func LoadVpcs(loader VpcLoader, tracer trace.Tracer) ([]*Vpc, error) {
+func LoadVpcs(loader iface.EC2IF, tracer trace.Tracer) ([]*Vpc, error) {
 	inDesc := &ec2.DescribeVpcsInput{DryRun: helper.NewFalse()}
 	outDesc, err := loader.DescribeVpcs(inDesc)
 

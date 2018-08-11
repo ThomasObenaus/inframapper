@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/thomasobenaus/inframapper/aws/iface"
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
@@ -16,7 +17,7 @@ type infraLoaderImpl struct {
 	awsProfile string
 	awsRegion  string
 
-	ec2IF EC2IF
+	ec2IF iface.EC2IF
 }
 
 func (sl *infraLoaderImpl) Load() (Infra, error) {

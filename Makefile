@@ -51,6 +51,7 @@ generate.mocks:
 	@echo "--> generate mocks (github.com/golang/mock/gomock is required for this)"
 	@go get github.com/golang/mock/gomock
 	@go install github.com/golang/mock/mockgen
+	@mockgen -source=aws/iface/aws_IF.go -destination test/mock_aws_iface/mock_aws_IF.go 
 	@mockgen -source=aws/infra_loader.go -destination test/mock_aws/mock_infra_loader.go 
 	@mockgen -source=aws/infra.go -destination test/mock_aws/mock_infra.go
 	@mockgen -source=aws/resource.go -destination test/mock_aws/mock_resource.go
