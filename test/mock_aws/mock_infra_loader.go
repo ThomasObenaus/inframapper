@@ -34,25 +34,14 @@ func (m *MockInfraLoader) EXPECT() *MockInfraLoaderMockRecorder {
 }
 
 // Load mocks base method
-func (m *MockInfraLoader) Load() error {
+func (m *MockInfraLoader) Load() (aws.Infra, error) {
 	ret := m.ctrl.Call(m, "Load")
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(aws.Infra)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Load indicates an expected call of Load
 func (mr *MockInfraLoaderMockRecorder) Load() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Load", reflect.TypeOf((*MockInfraLoader)(nil).Load))
-}
-
-// GetLoadedInfra mocks base method
-func (m *MockInfraLoader) GetLoadedInfra() aws.Infra {
-	ret := m.ctrl.Call(m, "GetLoadedInfra")
-	ret0, _ := ret[0].(aws.Infra)
-	return ret0
-}
-
-// GetLoadedInfra indicates an expected call of GetLoadedInfra
-func (mr *MockInfraLoaderMockRecorder) GetLoadedInfra() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLoadedInfra", reflect.TypeOf((*MockInfraLoader)(nil).GetLoadedInfra))
 }

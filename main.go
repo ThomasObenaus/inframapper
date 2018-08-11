@@ -24,11 +24,10 @@ func main() {
 		log.Fatalf("Error creating InfraLoader for AWS: %s", err.Error())
 	}
 
-	if err := awsInfraLoader.Load(); err != nil {
+	awsInfra, err := awsInfraLoader.Load()
+	if err != nil {
 		log.Fatalf("Error loading AWS infra: %s", err.Error())
 	}
-
-	awsInfra := awsInfraLoader.GetLoadedInfra()
 	tracer.Trace("AWS Infra: ", awsInfra)
 
 	tfStateLoader := tfstate.NewStateLoaderWithTracer(tracer)
