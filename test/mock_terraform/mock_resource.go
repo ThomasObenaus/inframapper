@@ -6,7 +6,7 @@ package mock_terraform
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	terraform "github.com/thomas.obenaus/inframapper/terraform"
+	terraform "github.com/thomasobenaus/inframapper/terraform"
 	reflect "reflect"
 )
 

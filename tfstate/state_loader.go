@@ -9,8 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	terraform "github.com/hashicorp/terraform/terraform"
-	"github.com/thomas.obenaus/inframapper/tfstate/iface"
-	"github.com/thomas.obenaus/inframapper/trace"
+	"github.com/thomasobenaus/inframapper/tfstate/iface"
+	"github.com/thomasobenaus/inframapper/trace"
 )
 
 type tfStateLoader struct {

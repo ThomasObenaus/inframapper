@@ -6,11 +6,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thomas.obenaus/inframapper/aws"
-	"github.com/thomas.obenaus/inframapper/terraform"
-	"github.com/thomas.obenaus/inframapper/test/mock_aws"
-	"github.com/thomas.obenaus/inframapper/test/mock_terraform"
-	"github.com/thomas.obenaus/inframapper/trace"
+	"github.com/thomasobenaus/inframapper/aws"
+	"github.com/thomasobenaus/inframapper/terraform"
+	"github.com/thomasobenaus/inframapper/test/mock_aws"
+	"github.com/thomasobenaus/inframapper/test/mock_terraform"
+	"github.com/thomasobenaus/inframapper/trace"
 )
 
 func TestMap(t *testing.T) {

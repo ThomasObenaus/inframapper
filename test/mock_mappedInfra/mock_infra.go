@@ -6,7 +6,7 @@ package mock_mappedInfra
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	mappedInfra "github.com/thomas.obenaus/inframapper/mappedInfra"
+	mappedInfra "github.com/thomasobenaus/inframapper/mappedInfra"
 	reflect "reflect"
 )
 

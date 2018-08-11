@@ -1,8 +1,8 @@
 package mappedInfra
 
 import (
-	"github.com/thomas.obenaus/inframapper/aws"
-	"github.com/thomas.obenaus/inframapper/terraform"
+	"github.com/thomasobenaus/inframapper/aws"
+	"github.com/thomasobenaus/inframapper/terraform"
 )
 
 type MappedResource interface {

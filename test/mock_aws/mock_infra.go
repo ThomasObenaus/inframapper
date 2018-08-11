@@ -6,7 +6,7 @@ package mock_aws
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	aws "github.com/thomas.obenaus/inframapper/aws"
+	aws "github.com/thomasobenaus/inframapper/aws"
 	reflect "reflect"
 )
 

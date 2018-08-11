@@ -7,7 +7,7 @@ package mock_iface
 import (
 	gomock "github.com/golang/mock/gomock"
 	terraform "github.com/hashicorp/terraform/terraform"
-	iface "github.com/thomas.obenaus/inframapper/tfstate/iface"
+	iface "github.com/thomasobenaus/inframapper/tfstate/iface"
 	reflect "reflect"
 )
 

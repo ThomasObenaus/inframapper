@@ -6,9 +6,9 @@ package mock_mappedInfra
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	aws "github.com/thomas.obenaus/inframapper/aws"
-	mappedInfra "github.com/thomas.obenaus/inframapper/mappedInfra"
-	terraform "github.com/thomas.obenaus/inframapper/terraform"
+	aws "github.com/thomasobenaus/inframapper/aws"
+	mappedInfra "github.com/thomasobenaus/inframapper/mappedInfra"
+	terraform "github.com/thomasobenaus/inframapper/terraform"
 	reflect "reflect"
 )
 

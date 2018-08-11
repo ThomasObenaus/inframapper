@@ -2,7 +2,7 @@ package aws
 
 import (
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"github.com/thomas.obenaus/inframapper/helper"
+	"github.com/thomasobenaus/inframapper/helper"
 )
 
 type Vpc struct {

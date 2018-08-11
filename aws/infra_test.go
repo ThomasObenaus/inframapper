@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thomas.obenaus/inframapper/trace"
+	"github.com/thomasobenaus/inframapper/trace"
 )
 
 func TestFindById(t *testing.T) {

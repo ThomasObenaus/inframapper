@@ -12,9 +12,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thomas.obenaus/inframapper/test/mock_tfstate_iface"
-	"github.com/thomas.obenaus/inframapper/tfstate/iface"
-	"github.com/thomas.obenaus/inframapper/trace"
+	"github.com/thomasobenaus/inframapper/test/mock_tfstate_iface"
+	"github.com/thomasobenaus/inframapper/tfstate/iface"
+	"github.com/thomasobenaus/inframapper/trace"
 )
 
 type emptyStateBuffer struct {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thomas.obenaus/inframapper/aws"
+	"github.com/thomasobenaus/inframapper/aws"
 )
 
 func TestNewInfra(t *testing.T) {
