@@ -17,15 +17,15 @@ type VpcLoader interface {
 	DescribeVpcs(input *ec2.DescribeVpcsInput) (*ec2.DescribeVpcsOutput, error)
 }
 
-func (vpc *Vpc) Id() string {
+func (vpc Vpc) Id() string {
 	return vpc.VpcId
 }
 
-func (vpc *Vpc) Type() ResourceType {
+func (vpc Vpc) Type() ResourceType {
 	return Type_VPC
 }
 
-func (vpc *Vpc) String() string {
+func (vpc Vpc) String() string {
 	result := "id=" + vpc.VpcId + ", cidr=" + vpc.CIDR
 
 	if vpc.IsDefaultVPC {

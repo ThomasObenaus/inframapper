@@ -3,6 +3,7 @@ package tfstate
 import (
 	"fmt"
 	"io"
+	"log"
 	"sync"
 	"testing"
 
@@ -69,10 +70,7 @@ func TestSMLoad(t *testing.T) {
 
 func TestSMLoadRemoteSuccess(t *testing.T) {
 
-	keys := make([]string, 0)
-	keys = append(keys, "f1")
-	keys = append(keys, "f2")
-	keys = append(keys, "f3")
+	keys := []string{"f1", "f2", "f3"}
 
 	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
 
@@ -98,8 +96,7 @@ func TestSMLoadRemoteSuccess(t *testing.T) {
 
 func TestSMLoadRemoteFailNoData(t *testing.T) {
 
-	keys := make([]string, 0)
-	keys = append(keys, "f1")
+	keys := []string{"f1"}
 
 	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
 
@@ -118,8 +115,7 @@ func TestSMLoadRemoteFailNoData(t *testing.T) {
 
 func TestSMLoadRemoteFailParse(t *testing.T) {
 
-	keys := make([]string, 0)
-	keys = append(keys, "f1")
+	keys := []string{"f1"}
 
 	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
 
@@ -141,4 +137,28 @@ func TestSMLoadRemoteFailParse(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.Empty(t, stateList)
+}
+
+func ExampleLoadRemoteState() {
+	sLoader := NewStateLoader()
+	if sLoader == nil {
+		log.Fatalf("Error, creating state-loader\n")
+	}
+
+	keys := []string{"prod/stack1/terraform.state", "prod/stack2/terraform.state"}
+
+	remoteCfg := iface.RemoteConfig{
+		BucketName: "nameOfStateBucket",
+		Region:     "regionOfTheStateBucket",
+		Profile:    "profileGrantingAccessToStateBucket",
+		Keys:       keys,
+	}
+
+	state, err := sLoader.LoadRemoteState(remoteCfg)
+	if err != nil || state == nil {
+		log.Fatalf("Error, loading state: %s", err.Error())
+	}
+
+	// do sth. with the state here
+
 }

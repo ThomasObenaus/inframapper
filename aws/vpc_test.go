@@ -2,6 +2,7 @@ package aws
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -60,4 +61,26 @@ func TestLoadVPCSuccess(t *testing.T) {
 	require.Len(t, vpcs, 2)
 	assert.Equal(t, "12345", vpcs[0].VpcId)
 	assert.Equal(t, "67890", vpcs[1].VpcId)
+}
+
+func ExampleLoadVpcs() {
+
+	tracer := trace.Off()
+
+	// create aws session
+	sess, err := newAWSSession("myprofile", "eu-central-1")
+	if err != nil {
+		log.Fatalf("Unable to create session: %s", err.Error())
+	}
+
+	// obtain ec2 interface
+	ec2IF := ec2.New(sess)
+
+	// load the vpcs
+	vpcs, err := LoadVpcs(ec2IF, tracer)
+	if err != nil {
+		log.Fatalf("Unable to load vpcs: %s", err.Error())
+	}
+
+	log.Printf("Loaded %d vpcs", len(vpcs))
 }
