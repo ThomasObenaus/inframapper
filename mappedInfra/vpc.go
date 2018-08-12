@@ -42,7 +42,7 @@ func (v *vpc) Terraform() terraform.Resource {
 	return v.tfVpc
 }
 
-func (v *vpc) ResourceType() Type {
+func (v *vpc) ResourceType() ResourceType {
 	return Type_VPC
 }
 

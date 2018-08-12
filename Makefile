@@ -44,7 +44,7 @@ generate:
 	@go get golang.org/x/tools/cmd/stringer
 	@stringer -type=ResourceType terraform/resource_type.go
 	@stringer -type=ResourceType aws/resource_type.go
-	@stringer -type=Type mappedInfra
+	@stringer -type=ResourceType mappedInfra/resource_type.go
 
 generate.mocks:
 	@echo "----------------------------------------------------------------------------------"

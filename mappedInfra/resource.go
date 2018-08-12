@@ -10,13 +10,6 @@ type MappedResource interface {
 	HasAws() bool
 	HasTerraform() bool
 	Terraform() terraform.Resource
-	ResourceType() Type
+	ResourceType() ResourceType
 	String() string
 }
-
-// Type represents the type of an aws resource
-type Type int
-
-const (
-	Type_VPC Type = iota
-)

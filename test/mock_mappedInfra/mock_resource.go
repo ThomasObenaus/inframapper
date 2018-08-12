@@ -84,9 +84,9 @@ func (mr *MockMappedResourceMockRecorder) Terraform() *gomock.Call {
 }
 
 // ResourceType mocks base method
-func (m *MockMappedResource) ResourceType() mappedInfra.Type {
+func (m *MockMappedResource) ResourceType() mappedInfra.ResourceType {
 	ret := m.ctrl.Call(m, "ResourceType")
-	ret0, _ := ret[0].(mappedInfra.Type)
+	ret0, _ := ret[0].(mappedInfra.ResourceType)
 	return ret0
 }
 
