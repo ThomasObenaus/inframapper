@@ -58,9 +58,9 @@ func (mr *MockResourceMockRecorder) Name() *gomock.Call {
 }
 
 // Type mocks base method
-func (m *MockResource) Type() terraform.Type {
+func (m *MockResource) Type() terraform.ResourceType {
 	ret := m.ctrl.Call(m, "Type")
-	ret0, _ := ret[0].(terraform.Type)
+	ret0, _ := ret[0].(terraform.ResourceType)
 	return ret0
 }
 

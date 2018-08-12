@@ -1,17 +1,17 @@
 package terraform
 
 // Type represents the type of an aws resource
-type Type int
+type ResourceType int
 
 const (
-	Type_unkown Type = iota
+	Type_unkown ResourceType = iota
 	Type_aws_vpc
 )
 
-var typeMap = map[string]Type{
+var typeMap = map[string]ResourceType{
 	"aws_vpc": Type_aws_vpc,
 }
 
-func StrToType(v string) Type {
+func StrToType(v string) ResourceType {
 	return typeMap[v]
 }

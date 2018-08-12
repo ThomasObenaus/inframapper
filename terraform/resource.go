@@ -5,7 +5,7 @@ import "strconv"
 type Resource interface {
 	Id() string
 	Name() string
-	Type() Type
+	Type() ResourceType
 	Dependencies() []string
 	Provider() string
 	String() string
@@ -13,7 +13,7 @@ type Resource interface {
 type resourceImpl struct {
 	id        string
 	name      string
-	rType     Type
+	rType     ResourceType
 	dependsOn []string
 	provider  string
 }
@@ -26,7 +26,7 @@ func (r *resourceImpl) Name() string {
 	return r.name
 }
 
-func (r *resourceImpl) Type() Type {
+func (r *resourceImpl) Type() ResourceType {
 	return r.rType
 }
 
