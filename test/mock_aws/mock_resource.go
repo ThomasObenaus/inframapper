@@ -46,9 +46,9 @@ func (mr *MockResourceMockRecorder) Id() *gomock.Call {
 }
 
 // Type mocks base method
-func (m *MockResource) Type() aws.Type {
+func (m *MockResource) Type() aws.ResourceType {
 	ret := m.ctrl.Call(m, "Type")
-	ret0, _ := ret[0].(aws.Type)
+	ret0, _ := ret[0].(aws.ResourceType)
 	return ret0
 }
 

@@ -14,7 +14,7 @@ func (v *vpc) Id() string {
 	return v.awsVpc.Id()
 }
 
-func (v *vpc) Type() aws.Type {
+func (v *vpc) Type() aws.ResourceType {
 	return v.awsVpc.Type()
 }
 

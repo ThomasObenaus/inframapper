@@ -21,7 +21,7 @@ func (vpc *Vpc) Id() string {
 	return vpc.VpcId
 }
 
-func (vpc *Vpc) Type() Type {
+func (vpc *Vpc) Type() ResourceType {
 	return Type_VPC
 }
 
