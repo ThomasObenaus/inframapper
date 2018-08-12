@@ -45,7 +45,9 @@ func NewInfraLoader(awsProfile string, awsRegion string) (InfraLoader, error) {
 	return NewInfraLoaderWithTracer(awsProfile, awsRegion, nil)
 }
 
-// NewInfraLoaderWithTracer creates a InfraLoader instance using the given Tracer for logging
+// NewInfraLoaderWithTracer creates a InfraLoader instance using the given Tracer for logging.
+// With this InfraLoader data from an aws account can be loaded. The account + needed access credentials are
+// defined by awsProfile and awsRegion.
 func NewInfraLoaderWithTracer(awsProfile string, awsRegion string, tracer trace.Tracer) (InfraLoader, error) {
 
 	if len(awsProfile) == 0 {
