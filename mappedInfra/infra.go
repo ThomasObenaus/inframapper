@@ -8,12 +8,24 @@ type Infra interface {
 	NumResources() int
 	Resources() []MappedResource
 	ResourceById(id string) MappedResource
+	String() string
 }
 
 type infraImpl struct {
 	mappedResourcesById map[string]MappedResource
 	mappedResources     []MappedResource
 	tracer              trace.Tracer
+}
+
+func (in *infraImpl) String() string {
+
+	result := ""
+	for _, res := range in.Resources() {
+
+		result += res.String() + ", "
+	}
+
+	return result
 }
 
 func (in *infraImpl) NumResources() int {

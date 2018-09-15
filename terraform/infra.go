@@ -26,7 +26,7 @@ func (infra *infraImpl) NumResources() int {
 }
 
 func (infra *infraImpl) String() string {
-	return "#res=" + strconv.Itoa(infra.NumResources())
+	return "#resources=" + strconv.Itoa(infra.NumResources())
 }
 
 func (infra *infraImpl) FindById(id string) Resource {

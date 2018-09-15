@@ -30,6 +30,10 @@ func (v *vpc) Aws() aws.Resource {
 	return v.awsVpc
 }
 
+func (v *vpc) IsMapped() bool {
+	return v.HasTerraform() && v.HasAws()
+}
+
 func (v *vpc) HasAws() bool {
 	return v.awsVpc != nil
 }

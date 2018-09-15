@@ -9,6 +9,7 @@ type MappedResource interface {
 	Aws() aws.Resource
 	HasAws() bool
 	HasTerraform() bool
+	IsMapped() bool
 	Terraform() terraform.Resource
 	ResourceType() ResourceType
 	String() string

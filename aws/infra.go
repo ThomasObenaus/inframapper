@@ -44,7 +44,7 @@ func (infra *infraImpl) String() string {
 		return "INVALID"
 	}
 
-	return "[" + infra.data.profile + "] " + infra.Region() + ", " + strconv.Itoa(infra.NumResources())
+	return "[" + infra.data.profile + "] " + infra.Region() + ", #resources=" + strconv.Itoa(infra.NumResources())
 }
 
 func (infra *infraImpl) FindById(id string) Resource {
