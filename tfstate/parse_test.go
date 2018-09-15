@@ -1,12 +1,5 @@
 package tfstate
 
-import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-)
-
 var invalidData = `{;[}]}`
 
 var emptyData = `{}`
@@ -168,36 +161,36 @@ var instanceAndSgState = `{
 }
 `
 
-func TestParse_Fail(t *testing.T) {
-	tfstate, err := Parse([]byte(invalidData))
-	if err == nil {
-		assert.Fail(t, "Parse was expected to fail")
-	}
-	if tfstate != nil {
-		assert.Fail(t, "Parse was expected to fail")
-	}
-}
-
-func TestParse(t *testing.T) {
-	tfstate, err := Parse([]byte(instanceAndSgState))
-	if err != nil {
-		assert.Failf(t, "Parse failed: %s", err.Error())
-	}
-	require.NotNil(t, tfstate, "tfstate is nil")
-
-	// modules
-	require.NotEmpty(t, tfstate.Modules, "No modules found")
-
-	module := tfstate.Modules[0]
-	resources := module.Resources
-
-	// modules
-	require.Len(t, resources, 3, "Expected 3 resources")
-
-	// instance
-	instance := resources["aws_instance.hello_world"]
-	require.NotNil(t, instance)
-	assert.Equal(t, "aws_instance", instance.Type)
-	require.NotNil(t, instance.Primary)
-	assert.Equal(t, "i-07914cc8cd9ca4825", instance.Primary.ID)
-}
+//func TestParse_Fail(t *testing.T) {
+//	tfstate, err := Parse([]byte(invalidData))
+//	if err == nil {
+//		assert.Fail(t, "Parse was expected to fail")
+//	}
+//	if tfstate != nil {
+//		assert.Fail(t, "Parse was expected to fail")
+//	}
+//}
+//
+//func TestParse(t *testing.T) {
+//	tfstate, err := Parse([]byte(instanceAndSgState))
+//	if err != nil {
+//		assert.Failf(t, "Parse failed: %s", err.Error())
+//	}
+//	require.NotNil(t, tfstate, "tfstate is nil")
+//
+//	// modules
+//	require.NotEmpty(t, tfstate.Modules, "No modules found")
+//
+//	module := tfstate.Modules[0]
+//	resources := module.Resources
+//
+//	// modules
+//	require.Len(t, resources, 3, "Expected 3 resources")
+//
+//	// instance
+//	instance := resources["aws_instance.hello_world"]
+//	require.NotNil(t, instance)
+//	assert.Equal(t, "aws_instance", instance.Type)
+//	require.NotNil(t, instance.Primary)
+//	assert.Equal(t, "i-07914cc8cd9ca4825", instance.Primary.ID)
+//}
