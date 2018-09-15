@@ -20,3 +20,5 @@ mappedInfra/debug\.test
 tfstate/debug\.test
 
 inframapper
+
+coverage\.out

@@ -1,7 +1,7 @@
 .DEFAULT_GOAL				:= all
 name 								:= "inframapper"
 
-all: vendor build cover finish
+all: vendor build tools cover finish
 
 .PHONY: test
 test: generate.mocks
@@ -13,7 +13,13 @@ test: generate.mocks
 cover: generate.mocks
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> Run the unit-tests + coverage"
-	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -cover -v
+	@go test ./tfstate ./trace ./aws ./mappedInfra ./terraform -v -covermode=count -coverprofile=coverage.out
+
+cover.upload:
+	# for this to get working you have to export the repo_token for your repo at coveralls.io
+	# i.e. export INFRA_MAPPER_COVERALLS_REPO_TOKEN=<your token>
+	@${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=circleci -repotoken=${INFRA_MAPPER_COVERALLS_REPO_TOKEN}
+	
 
 #-----------------
 #-- build
@@ -38,6 +44,17 @@ depend.install:
 
 vendor: depend.install
 
+#------------------
+#-- Tools
+#------------------
+tools:
+	@go get golang.org/x/tools/cmd/cover
+	@go get github.com/mattn/goveralls	
+
+
+#------------------
+#-- Generate
+#------------------
 generate:
 	@echo "----------------------------------------------------------------------------------"
 	@echo "--> generate String() for enums (golang.org/x/tools/cmd/stringer is required for this)"
