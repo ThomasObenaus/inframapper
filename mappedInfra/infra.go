@@ -7,14 +7,18 @@ import (
 type Infra interface {
 	NumResources() int
 	Resources() []MappedResource
-	ResourceById(id string) MappedResource
+	AwsResourceById(id string) MappedResource
+	MappedResources() []MappedResource
+	UnMappedAwsResources() []MappedResource
 	String() string
 }
 
 type infraImpl struct {
-	mappedResourcesById map[string]MappedResource
-	mappedResources     []MappedResource
-	tracer              trace.Tracer
+	awsResourcesById     map[string]MappedResource
+	resources            []MappedResource
+	mappedResources      []MappedResource
+	unMappedAwsResources []MappedResource
+	tracer               trace.Tracer
 }
 
 func (in *infraImpl) String() string {
@@ -28,45 +32,56 @@ func (in *infraImpl) String() string {
 	return result
 }
 
-func (in *infraImpl) NumResources() int {
-	return len(in.mappedResources)
+func (in *infraImpl) UnMappedAwsResources() []MappedResource {
+	return in.unMappedAwsResources
 }
 
-func (in *infraImpl) Resources() []MappedResource {
+func (in *infraImpl) MappedResources() []MappedResource {
 	return in.mappedResources
 }
 
-func (in *infraImpl) ResourceById(id string) MappedResource {
-	return in.mappedResourcesById[id]
+func (in *infraImpl) NumResources() int {
+	return len(in.resources)
 }
 
-func NewInfraWithTracer(mappedResources []MappedResource, tracer trace.Tracer) (Infra, error) {
+func (in *infraImpl) Resources() []MappedResource {
+	return in.resources
+}
+
+func (in *infraImpl) AwsResourceById(id string) MappedResource {
+	return in.awsResourcesById[id]
+}
+
+func NewInfraWithTracer(resources []MappedResource, tracer trace.Tracer) (Infra, error) {
 	if tracer == nil {
 		tracer = trace.Off()
 	}
 
-	mappedResourcesById := make(map[string]MappedResource)
-	for _, mResource := range mappedResources {
+	var mappedResources []MappedResource
+	var unMappedAwsResources []MappedResource
 
-		if !mResource.HasAws() {
-			tracer.Trace("Ignore resource (res by id), since aws data is missing: ", mResource.String())
-			continue
-		}
+	awsResourcesById := make(map[string]MappedResource)
+	for _, mResource := range resources {
 
-		id := mResource.Aws().Id()
-		if len(id) == 0 {
-			tracer.Trace("Ignore resource (res by id), since id is missing: ", mResource.String())
-			continue
+		if mResource.IsMapped() {
+			awsResourcesById[mResource.Aws().Id()] = mResource
+			mappedResources = append(mappedResources, mResource)
+		} else if mResource.HasAws() {
+			awsResourcesById[mResource.Aws().Id()] = mResource
+			unMappedAwsResources = append(unMappedAwsResources, mResource)
+		} else {
+			tracer.Trace("Ignore resource since it has no aws data: ", mResource.String())
 		}
-		mappedResourcesById[mResource.Aws().Id()] = mResource
 	}
 
 	return &infraImpl{
-		mappedResourcesById: mappedResourcesById,
-		mappedResources:     mappedResources,
-		tracer:              tracer}, nil
+		awsResourcesById:     awsResourcesById,
+		resources:            resources,
+		mappedResources:      mappedResources,
+		unMappedAwsResources: unMappedAwsResources,
+		tracer:               tracer}, nil
 }
 
-func NewInfra(mappedResources []MappedResource) (Infra, error) {
-	return NewInfraWithTracer(mappedResources, nil)
+func NewInfra(resources []MappedResource) (Infra, error) {
+	return NewInfraWithTracer(resources, nil)
 }

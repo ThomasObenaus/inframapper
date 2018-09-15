@@ -67,26 +67,17 @@ func main() {
 	}
 	tracer.Trace("Mapping tf-state and aws infra ... done")
 
-	var mappedInfraStr string
-	var unMappedInfraStr string
-	var unMappedTfStateStr string
-	for _, res := range mappedInfra.Resources() {
-
-		resStr := "\t" + res.String() + "\n"
-		if res.IsMapped() {
-			mappedInfraStr += resStr
-		} else if res.HasAws() {
-			unMappedInfraStr += resStr
-		} else {
-			unMappedTfStateStr += resStr
-		}
+	var mappedResStr string
+	var unMappedAwsResStr string
+	for _, res := range mappedInfra.MappedResources() {
+		mappedResStr += "\t" + res.String() + "\n"
 	}
-	tracer.Trace("Mapped Infra [", mappedInfra.NumResources(), "]:")
-	tracer.Trace("Mapped:")
-	tracer.Trace(mappedInfraStr)
-	tracer.Trace("Unmapped (aws only):")
-	tracer.Trace(unMappedInfraStr)
-	tracer.Trace("Unmapped (terraform only):")
-	tracer.Trace(unMappedTfStateStr)
+	for _, res := range mappedInfra.UnMappedAwsResources() {
+		unMappedAwsResStr += "\t" + res.String() + "\n"
+	}
+	tracer.Trace("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
+	tracer.Trace(mappedResStr)
+	tracer.Trace("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
+	tracer.Trace(unMappedAwsResStr)
 
 }

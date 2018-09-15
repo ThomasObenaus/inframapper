@@ -57,14 +57,50 @@ func (mr *MockInfraMockRecorder) Resources() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Resources", reflect.TypeOf((*MockInfra)(nil).Resources))
 }
 
-// ResourceById mocks base method
-func (m *MockInfra) ResourceById(id string) mappedInfra.MappedResource {
-	ret := m.ctrl.Call(m, "ResourceById", id)
+// AwsResourceById mocks base method
+func (m *MockInfra) AwsResourceById(id string) mappedInfra.MappedResource {
+	ret := m.ctrl.Call(m, "AwsResourceById", id)
 	ret0, _ := ret[0].(mappedInfra.MappedResource)
 	return ret0
 }
 
-// ResourceById indicates an expected call of ResourceById
-func (mr *MockInfraMockRecorder) ResourceById(id interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResourceById", reflect.TypeOf((*MockInfra)(nil).ResourceById), id)
+// AwsResourceById indicates an expected call of AwsResourceById
+func (mr *MockInfraMockRecorder) AwsResourceById(id interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AwsResourceById", reflect.TypeOf((*MockInfra)(nil).AwsResourceById), id)
+}
+
+// MappedResources mocks base method
+func (m *MockInfra) MappedResources() []mappedInfra.MappedResource {
+	ret := m.ctrl.Call(m, "MappedResources")
+	ret0, _ := ret[0].([]mappedInfra.MappedResource)
+	return ret0
+}
+
+// MappedResources indicates an expected call of MappedResources
+func (mr *MockInfraMockRecorder) MappedResources() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MappedResources", reflect.TypeOf((*MockInfra)(nil).MappedResources))
+}
+
+// UnMappedAwsResources mocks base method
+func (m *MockInfra) UnMappedAwsResources() []mappedInfra.MappedResource {
+	ret := m.ctrl.Call(m, "UnMappedAwsResources")
+	ret0, _ := ret[0].([]mappedInfra.MappedResource)
+	return ret0
+}
+
+// UnMappedAwsResources indicates an expected call of UnMappedAwsResources
+func (mr *MockInfraMockRecorder) UnMappedAwsResources() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnMappedAwsResources", reflect.TypeOf((*MockInfra)(nil).UnMappedAwsResources))
+}
+
+// String mocks base method
+func (m *MockInfra) String() string {
+	ret := m.ctrl.Call(m, "String")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// String indicates an expected call of String
+func (mr *MockInfraMockRecorder) String() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "String", reflect.TypeOf((*MockInfra)(nil).String))
 }

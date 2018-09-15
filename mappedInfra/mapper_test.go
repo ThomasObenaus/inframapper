@@ -43,7 +43,7 @@ func TestMap(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 1, mappedInfra.NumResources())
 
-	res := mappedInfra.ResourceById(vpcId)
+	res := mappedInfra.AwsResourceById(vpcId)
 	require.NotNil(t, res)
 	assert.Equal(t, true, res.HasAws())
 	assert.Equal(t, vpcId, res.Aws().Id())

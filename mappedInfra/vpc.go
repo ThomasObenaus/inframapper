@@ -19,11 +19,11 @@ func (v *vpc) Type() aws.ResourceType {
 }
 
 func (v *vpc) String() string {
-	hasTfStr := "-tf"
+	tfStateStr := "no tf-state"
 	if v.HasTerraform() {
-		hasTfStr = "+tf"
+		tfStateStr = v.Terraform().Name()
 	}
-	return "[" + hasTfStr + "] " + v.awsVpc.String()
+	return "[" + tfStateStr + "] " + v.awsVpc.String()
 }
 
 func (v *vpc) Aws() aws.Resource {

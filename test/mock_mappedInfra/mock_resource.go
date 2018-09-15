@@ -71,6 +71,18 @@ func (mr *MockMappedResourceMockRecorder) HasTerraform() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasTerraform", reflect.TypeOf((*MockMappedResource)(nil).HasTerraform))
 }
 
+// IsMapped mocks base method
+func (m *MockMappedResource) IsMapped() bool {
+	ret := m.ctrl.Call(m, "IsMapped")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsMapped indicates an expected call of IsMapped
+func (mr *MockMappedResourceMockRecorder) IsMapped() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsMapped", reflect.TypeOf((*MockMappedResource)(nil).IsMapped))
+}
+
 // Terraform mocks base method
 func (m *MockMappedResource) Terraform() terraform.Resource {
 	ret := m.ctrl.Call(m, "Terraform")
