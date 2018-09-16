@@ -73,3 +73,33 @@ func TestVpcs(t *testing.T) {
 	vpcs = infra.Vpcs()
 	assert.Nil(t, vpcs)
 }
+
+func TestRegion(t *testing.T) {
+
+	data := &infraData{region: "eu-central-1"}
+	infra, err := newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+	assert.Equal(t, infra.Region(), "eu-central-1")
+
+	data = &infraData{}
+	infra, err = newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+	assert.Equal(t, infra.Region(), "UNKNOWN")
+}
+
+func TestString(t *testing.T) {
+
+	data := &infraData{}
+	infra, err := newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+	assert.Equal(t, infra.String(), "[] UNKNOWN, #resources=0")
+
+	data = &infraData{profile: "snapshot", region: "eu-central-1"}
+	infra, err = newInfra(data)
+	require.NotNil(t, infra)
+	require.NoError(t, err)
+	assert.Equal(t, infra.String(), "[snapshot] eu-central-1, #resources=0")
+}
