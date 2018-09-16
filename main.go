@@ -75,6 +75,8 @@ func main() {
 	for _, res := range mappedInfra.UnMappedAwsResources() {
 		unMappedAwsResStr += "\t" + res.String() + "\n"
 	}
+
+	tracer.Trace("Mapped Infra: ", mappedInfra)
 	tracer.Trace("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
 	tracer.Trace(mappedResStr)
 	tracer.Trace("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")

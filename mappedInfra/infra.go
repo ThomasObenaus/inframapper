@@ -1,6 +1,8 @@
 package mappedInfra
 
 import (
+	"strconv"
+
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
@@ -23,12 +25,9 @@ type infraImpl struct {
 
 func (in *infraImpl) String() string {
 
-	result := ""
-	for _, res := range in.Resources() {
-
-		result += res.String() + ", "
-	}
-
+	result := "#res=" + strconv.Itoa(in.NumResources())
+	result += ", #mapped=" + strconv.Itoa(len(in.MappedResources()))
+	result += ", #aws_res=" + strconv.Itoa(len(in.UnMappedAwsResources()))
 	return result
 }
 
