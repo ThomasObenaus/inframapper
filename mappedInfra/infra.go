@@ -1,3 +1,5 @@
+// Package mappedInfra contains code to map infrastructure resources available in an AWS account with
+// the corresponding resources described in terraform code.
 package mappedInfra
 
 import (
@@ -6,11 +8,25 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// Infra is an interface reflecting the mapping between real infrastructure
+// resources living on AWS with the according resource description in
+// terraform code.
+// To obtain an Infra object you have to load terraform state, read AWS resource
+// information and use this as input for NewInfraWithTracer().
 type Infra interface {
+	// NumResources returns the number of resources.
 	NumResources() int
+
+	// Resources returns all ressources those that could be mapped and those that could not.
 	Resources() []MappedResource
+
+	// AwsResourceById returns the AWS resource that matches the given id.
 	AwsResourceById(id string) MappedResource
+
+	// MappedResources returns all ressources that could be mapped.
 	MappedResources() []MappedResource
+
+	// MappedResources returns all ressources that could NOT be mapped.
 	UnMappedAwsResources() []MappedResource
 	String() string
 }
@@ -51,6 +67,8 @@ func (in *infraImpl) AwsResourceById(id string) MappedResource {
 	return in.awsResourcesById[id]
 }
 
+// NewInfraWithTracer creates an Infra object reflecting the mapping between AWS resources
+// and the corresponding terraform code.
 func NewInfraWithTracer(resources []MappedResource, tracer trace.Tracer) (Infra, error) {
 	if tracer == nil {
 		tracer = trace.Off()
@@ -81,6 +99,8 @@ func NewInfraWithTracer(resources []MappedResource, tracer trace.Tracer) (Infra,
 		tracer:               tracer}, nil
 }
 
+// NewInfra creates an Infra object reflecting the mapping between AWS resources
+// and the corresponding terraform code.
 func NewInfra(resources []MappedResource) (Infra, error) {
 	return NewInfraWithTracer(resources, nil)
 }

@@ -1,4 +1,4 @@
-// Contains code for loading and parsing terraform state.
+// Package tfstate contains code for loading and parsing terraform state.
 // TfState can be loaded from a local file or from remote (S3).
 package tfstate
 

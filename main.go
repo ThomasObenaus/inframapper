@@ -18,7 +18,7 @@ func main() {
 	tracer := trace.New(os.Stdout)
 	tracerOff := trace.Off()
 
-	// load the aws infra
+	// Step 1: Load the AWS infra
 	tracer.Trace("Loading AWS Infra ...")
 	awsInfraLoader, err := aws.NewInfraLoaderWithTracer(profile, region, tracer)
 	if err != nil {
@@ -32,7 +32,7 @@ func main() {
 	tracer.Trace("Loading AWS Infra ... done")
 	tracer.Trace("AWS Infra: ", awsInfra)
 
-	// Load the terraform state for the infra
+	// Step 2a: Load the terraform state for the infra
 	tracer.Trace("\n\nLoading Terraform state ...")
 	keys := make([]string, 2)
 	keys[0] = "snapshot/base/networking/terraform.tfstate"
@@ -50,6 +50,7 @@ func main() {
 		log.Fatalf("Error loading remote terraform state: %s", err.Error())
 	}
 
+	// Step 2b: Create terraform infra representation based on the loaded state.
 	tfInfra, err := terraform.NewInfraWithTracer(tfStateList, tracerOff)
 	if err != nil {
 		log.Fatalf("Error loading terraform infrastructure: %s", err.Error())
@@ -57,7 +58,7 @@ func main() {
 	tracer.Trace("Loading Terraform state ... done")
 	tracer.Trace("Terraform Infra: ", tfInfra)
 
-	// Mapping tf-state and aws infra
+	// Step 3: Map terraform state and aws infra
 	tracer.Trace("\n\nMapping tf-state and aws infra ...")
 	mapper := mappedInfra.NewMapperWithTracer(tracer)
 	mappedInfra, err := mapper.Map(awsInfra, tfInfra)

@@ -46,15 +46,15 @@ func (mr *MockInfraMockRecorder) FindById(id interface{}) *gomock.Call {
 }
 
 // FindByName mocks base method
-func (m *MockInfra) FindByName(id string) terraform.Resource {
-	ret := m.ctrl.Call(m, "FindByName", id)
+func (m *MockInfra) FindByName(name string) terraform.Resource {
+	ret := m.ctrl.Call(m, "FindByName", name)
 	ret0, _ := ret[0].(terraform.Resource)
 	return ret0
 }
 
 // FindByName indicates an expected call of FindByName
-func (mr *MockInfraMockRecorder) FindByName(id interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByName", reflect.TypeOf((*MockInfra)(nil).FindByName), id)
+func (mr *MockInfraMockRecorder) FindByName(name interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByName", reflect.TypeOf((*MockInfra)(nil).FindByName), name)
 }
 
 // NumResources mocks base method

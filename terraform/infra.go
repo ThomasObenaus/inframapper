@@ -1,4 +1,4 @@
-// Contains code representing and for interacting with resources that are described by terraform code.
+// Package terraform contains code representing and for interacting with resources that are described by terraform code.
 package terraform
 
 import (

@@ -7,7 +7,11 @@ import (
 	"github.com/thomasobenaus/inframapper/aws"
 )
 
+// Mapper is a interface for mapping AWS resources
+// to the corresponding terraform code.
 type Mapper interface {
+
+	// Map maps the given AWS resources and the terraform state.
 	Map(aws aws.Infra, tf terraform.Infra) (Infra, error)
 	String() string
 }
@@ -50,6 +54,8 @@ func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
 	return NewInfraWithTracer(mappedResources, m.tracer)
 }
 
+// NewMapperWithTracer creates a mapper that can be used to map the AWS resources
+// with the corresponding terraform code.
 func NewMapperWithTracer(tracer trace.Tracer) Mapper {
 	if tracer == nil {
 		tracer = trace.Off()
@@ -60,6 +66,8 @@ func NewMapperWithTracer(tracer trace.Tracer) Mapper {
 	}
 }
 
+// NewMapper creates a mapper that can be used to map the AWS resources
+// with the corresponding terraform code.
 func NewMapper() Mapper {
 	return NewMapperWithTracer(nil)
 }
