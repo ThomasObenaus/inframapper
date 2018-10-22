@@ -1,8 +1,8 @@
 package mappedInfra
 
 import (
+	"fmt"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -100,10 +100,9 @@ func TestMapVpc(t *testing.T) {
 	assert.Equal(t, terraform.Type_aws_vpc, res.Terraform().Type())
 }
 
-func ExampleLoadAndMap() {
+func ExampleLoadAndMap_remote() {
 	awsProfile := "develop"
 	awsRegion := "eu-central-1"
-	tracer := trace.New(os.Stdout)
 
 	keys := make([]string, 2)
 	keys[0] = "snapshot/base/networking/terraform.tfstate"
@@ -115,23 +114,31 @@ func ExampleLoadAndMap() {
 		Region:     "eu-central-1",
 	}
 
-	mappedInfra, err := LoadAndMap(awsProfile, awsRegion, remoteCfg, tracer)
+	mappedInfra, err := LoadAndMap(awsProfile, awsRegion, remoteCfg, nil)
 	if err != nil {
 		log.Fatalf("Error loading/ mapping infrastructure: %s", err.Error())
 	}
 
-	var mappedResStr string
-	var unMappedAwsResStr string
-	for _, res := range mappedInfra.MappedResources() {
-		mappedResStr += "\t" + res.String() + "\n"
-	}
-	for _, res := range mappedInfra.UnMappedAwsResources() {
-		unMappedAwsResStr += "\t" + res.String() + "\n"
+	// now you can do sth. with the resources
+	fmt.Println("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
+	fmt.Println("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
+}
+
+func ExampleLoadAndMap_local() {
+	awsProfile := "develop"
+	awsRegion := "eu-central-1"
+
+	files := []string{"../testdata/statefiles/instance.tfstate"}
+	localConfig := tfstate.LocalConfig{
+		Files: files,
 	}
 
-	tracer.Trace("Mapped Infra: ", mappedInfra)
-	tracer.Trace("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
-	tracer.Trace(mappedResStr)
-	tracer.Trace("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
-	tracer.Trace(unMappedAwsResStr)
+	mappedInfra, err := LoadAndMap(awsProfile, awsRegion, localConfig, nil)
+	if err != nil {
+		log.Fatalf("Error loading/ mapping infrastructure: %s", err.Error())
+	}
+
+	// now you can do sth. with the resources
+	fmt.Println("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
+	fmt.Println("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
 }

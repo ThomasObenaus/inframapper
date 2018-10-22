@@ -83,7 +83,10 @@ func LoadAndMap(awsProfile string, awsRegion string, stateBackend tfstate.StateB
 			return nil, fmt.Errorf("Error loading remote terraform state: %s", err.Error())
 		}
 	} else {
-		return nil, fmt.Errorf("Error loading local state is not implemented yet")
+		tfStateList, err = tfStateLoader.LoadFiles(stateBackend.LocalConfig().Files)
+		if err != nil {
+			return nil, fmt.Errorf("Error loading local terraform state: %s", err.Error())
+		}
 	}
 
 	tracer.Trace("Step 2a: Loading Terraform state ... done")

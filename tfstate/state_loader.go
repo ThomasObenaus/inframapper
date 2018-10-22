@@ -21,6 +21,9 @@ type StateLoader interface {
 	// Load loads a terraform state file
 	Load(filename string) (*terraform.State, error)
 
+	// LoadsFiles loads a list of terraform state files
+	LoadFiles(files []string) ([]*terraform.State, error)
+
 	// LoadRemoteState loads state from an aws S3 bucket
 	LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error)
 }
@@ -84,6 +87,21 @@ func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.S
 	downloader := s3manager.NewDownloader(session)
 
 	return sl.loadRemoteStateImpl(remoteCfg, downloader)
+}
+
+func (sl *tfStateLoader) LoadFiles(files []string) ([]*terraform.State, error) {
+	stateList := make([]*terraform.State, 0)
+
+	for _, file := range files {
+		state, err := sl.Load(file)
+		if err != nil {
+			sl.tracer.Trace("Error loading state file '", file, "': ", err.Error())
+			continue
+		}
+		stateList = append(stateList, state)
+	}
+
+	return stateList, nil
 }
 
 func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {

@@ -67,6 +67,33 @@ func TestSMLoad(t *testing.T) {
 
 }
 
+func TestSMLoadFiles(t *testing.T) {
+	sm := NewStateLoader()
+	require.NotNil(t, sm)
+
+	files := []string{"../testdata/statefiles/instance.tfstate", "../testdata/statefiles/instance.tfstate"}
+
+	tfstate, err := sm.LoadFiles(files)
+	assert.NoError(t, err)
+	assert.NotNil(t, tfstate)
+	assert.NotEmpty(t, tfstate)
+	assert.Equal(t, 2, len(tfstate))
+
+	files = []string{"???", "../testdata/statefiles/instance.tfstate"}
+
+	tfstate, err = sm.LoadFiles(files)
+	assert.NoError(t, err)
+	assert.NotNil(t, tfstate)
+	assert.NotEmpty(t, tfstate)
+	assert.Equal(t, 1, len(tfstate))
+
+	files = []string{}
+	tfstate, err = sm.LoadFiles(files)
+	assert.NoError(t, err)
+	assert.NotNil(t, tfstate)
+	assert.Empty(t, tfstate)
+}
+
 func TestSMLoadRemoteSuccess(t *testing.T) {
 
 	keys := []string{"f1", "f2", "f3"}
