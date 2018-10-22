@@ -1,4 +1,6 @@
-// Package aws contains code needed to query aws infrastructure
+// Package aws contains code needed to query aws infrastructure. This means reading all relevant data
+// from a given AWS account that is needed to reflec the current state of the resources.
+// No resources on the account will be removed or created.
 package aws
 
 import (
@@ -8,11 +10,25 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// Infra represents an interface reflecting all resources in the loaded
+// AWS infrastructure.
+// To obtain an Infra object you have to use the InfraLoader in order to
+// read in the resources from an AWS account.
 type Infra interface {
+
+	// FindById returns the AWS resource that matches the given id.
 	FindById(id string) Resource
+
+	// FindById returns the AWS VPC that matches the given id.
 	FindVpc(id string) *Vpc
+
+	// Vpcs returns all vpc's
 	Vpcs() []*Vpc
+
+	// NumResources returns the number of available resources.
 	NumResources() int
+
+	// Returns the AWS region for which the resources where read in.
 	Region() string
 
 	String() string

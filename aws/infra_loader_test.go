@@ -66,11 +66,16 @@ func TestRLLoadSuccess(t *testing.T) {
 }
 
 func ExampleNewInfraLoader() {
+
+	// Create a loader that will read the AWS resources for a given account
+	// Here the account is specified by the AWS profile 'playground'
+	// The region from where to read in is 'eu-central-1'
 	iLoader, err := NewInfraLoader("playground", "eu-central-1")
 	if err != nil {
 		log.Fatalf("Error, creating infra-loader: %s", err.Error())
 	}
 
+	// After loading the AWS resources all information is stored in infra.
 	infra, err := iLoader.Load()
 	if err != nil {
 		log.Fatalf("Error, loading infra: %s", err.Error())
