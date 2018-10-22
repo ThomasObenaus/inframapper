@@ -78,7 +78,7 @@ generate.mocks:
 	@mockgen -source=mappedInfra/mapper.go -destination test/mock_mappedInfra/mock_mapper.go
 	@mockgen -source=mappedInfra/resource.go -destination test/mock_mappedInfra/mock_resource.go
 	@mockgen -source=tfstate/iface/s3_downloader.go -destination test/mock_tfstate_iface/mock_s3_downloader.go
-	@mockgen -source=tfstate/iface/state_loader.go -destination test/mock_tfstate_iface/mock_state_loader.go
+	@mockgen -source=tfstate/state_loader.go -destination test/mock_tfstate/mock_state_loader.go
 
 run: build
 	@echo "----------------------------------------------------------------------------------"

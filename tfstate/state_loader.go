@@ -15,6 +15,16 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// StateLoader is a interface providing the possibility to load terraform state
+// from remote (S3) or a local file.
+type StateLoader interface {
+	// Load loads a terraform state file
+	Load(filename string) (*terraform.State, error)
+
+	// LoadRemoteState loads state from an aws S3 bucket
+	LoadRemoteState(remoteCfg iface.RemoteConfig) ([]*terraform.State, error)
+}
+
 type tfStateLoader struct {
 	tracer trace.Tracer
 }
@@ -97,12 +107,12 @@ func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
 }
 
 // NewStateLoader creates a new instance of a StateLoader without tracing
-func NewStateLoader() iface.StateLoader {
+func NewStateLoader() StateLoader {
 	return NewStateLoaderWithTracer(nil)
 }
 
 // NewStateLoaderWithTracer creates a new instance of a StateLoader with tracing
-func NewStateLoaderWithTracer(tracer trace.Tracer) iface.StateLoader {
+func NewStateLoaderWithTracer(tracer trace.Tracer) StateLoader {
 	if tracer == nil {
 		tracer = trace.Off()
 	}
