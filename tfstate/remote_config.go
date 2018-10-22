@@ -7,3 +7,15 @@ type RemoteConfig struct {
 	Profile    string
 	Region     string
 }
+
+func (l RemoteConfig) IsRemote() bool {
+	return true
+}
+
+func (l RemoteConfig) RemoteConfig() RemoteConfig {
+	return l
+}
+
+func (l RemoteConfig) LocalConfig() LocalConfig {
+	return LocalConfig{}
+}

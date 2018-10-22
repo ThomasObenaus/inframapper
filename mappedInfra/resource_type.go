@@ -1,6 +1,6 @@
 package mappedInfra
 
-// Type represents the type of an aws resource
+// ResourceType represents the type of an aws resource
 type ResourceType int
 
 const (
