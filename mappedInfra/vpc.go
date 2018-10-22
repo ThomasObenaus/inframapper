@@ -47,7 +47,7 @@ func (v *vpc) Terraform() terraform.Resource {
 }
 
 func (v *vpc) ResourceType() ResourceType {
-	return Type_VPC
+	return TypeVPC
 }
 
 // NewVpc creates a mapping between an AWS vpc and the according terraform resource.

@@ -39,7 +39,7 @@ func TestMap(t *testing.T) {
 	mockTerraformInfraObj.EXPECT().FindByID(vpcID).Return(mockTerraformResourceObj)
 	mockTerraformResourceObj.EXPECT().ID().Return(vpcID)
 	mockTerraformResourceObj.EXPECT().Name().Times(2).Return("aws_vpc.bla")
-	mockTerraformResourceObj.EXPECT().Type().Return(terraform.Type_aws_vpc)
+	mockTerraformResourceObj.EXPECT().Type().Return(terraform.TypeAwsVpc)
 
 	mappedInfra, err := mapper.Map(mockAwsInfraObj, mockTerraformInfraObj)
 	assert.NotNil(t, mappedInfra)
@@ -50,11 +50,11 @@ func TestMap(t *testing.T) {
 	require.NotNil(t, res)
 	assert.Equal(t, true, res.HasAws())
 	assert.Equal(t, vpcID, res.Aws().ID())
-	assert.Equal(t, aws.Type_VPC, res.Aws().Type())
+	assert.Equal(t, aws.TypeVPC, res.Aws().Type())
 	assert.Equal(t, true, res.HasTerraform())
 	assert.Equal(t, vpcID, res.Terraform().ID())
 	assert.Equal(t, "aws_vpc.bla", res.Terraform().Name())
-	assert.Equal(t, terraform.Type_aws_vpc, res.Terraform().Type())
+	assert.Equal(t, terraform.TypeAwsVpc, res.Terraform().Type())
 }
 
 func TestNew(t *testing.T) {
@@ -82,7 +82,7 @@ func TestMapVpc(t *testing.T) {
 	mockTerraformInfraObj.EXPECT().FindByID(vpcID).Return(mockTerraformResourceObj)
 	mockTerraformResourceObj.EXPECT().Name().Times(2).Return("aws_vpc.bla")
 	mockTerraformResourceObj.EXPECT().ID().Return(vpcID)
-	mockTerraformResourceObj.EXPECT().Type().Return(terraform.Type_aws_vpc)
+	mockTerraformResourceObj.EXPECT().Type().Return(terraform.TypeAwsVpc)
 
 	mappedInfraList := mapper.mapVpcs(vpcs, mockTerraformInfraObj)
 	assert.NotNil(t, mappedInfraList)
@@ -93,11 +93,11 @@ func TestMapVpc(t *testing.T) {
 	require.NotNil(t, res)
 	assert.Equal(t, true, res.HasAws())
 	assert.Equal(t, vpcID, res.Aws().ID())
-	assert.Equal(t, aws.Type_VPC, res.Aws().Type())
+	assert.Equal(t, aws.TypeVPC, res.Aws().Type())
 	assert.Equal(t, true, res.HasTerraform())
 	assert.Equal(t, vpcID, res.Terraform().ID())
 	assert.Equal(t, "aws_vpc.bla", res.Terraform().Name())
-	assert.Equal(t, terraform.Type_aws_vpc, res.Terraform().Type())
+	assert.Equal(t, terraform.TypeAwsVpc, res.Terraform().Type())
 }
 
 func ExampleLoadAndMap_remote() {

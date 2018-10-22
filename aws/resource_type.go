@@ -4,6 +4,6 @@ package aws
 type ResourceType int
 
 const (
-	// Type_VPC represents a AWS VPC
-	Type_VPC ResourceType = iota
+	// TypeVPC represents a AWS VPC
+	TypeVPC ResourceType = iota
 )

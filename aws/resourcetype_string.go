@@ -4,9 +4,9 @@ package aws
 
 import "strconv"
 
-const _ResourceType_name = "Type_VPC"
+const _ResourceType_name = "TypeVPC"
 
-var _ResourceType_index = [...]uint8{0, 8}
+var _ResourceType_index = [...]uint8{0, 7}
 
 func (i ResourceType) String() string {
 	if i < 0 || i >= ResourceType(len(_ResourceType_index)-1) {

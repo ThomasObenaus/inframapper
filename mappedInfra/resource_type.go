@@ -4,6 +4,6 @@ package mappedInfra
 type ResourceType int
 
 const (
-	// Type_VPC represents a VPC
-	Type_VPC ResourceType = iota
+	// TypeVPC represents a VPC
+	TypeVPC ResourceType = iota
 )

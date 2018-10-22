@@ -14,12 +14,14 @@ type Vpc struct {
 	CIDR         string
 }
 
+// ID returns the id of the AWS resource (i.e. 'vpc-f8168d93')
 func (vpc Vpc) ID() string {
 	return vpc.VpcID
 }
 
+// Type returns the type of this resource (i.e. aws_vpc)
 func (vpc Vpc) Type() ResourceType {
-	return Type_VPC
+	return TypeVPC
 }
 
 func (vpc Vpc) String() string {
