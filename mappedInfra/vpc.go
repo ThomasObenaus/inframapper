@@ -10,8 +10,8 @@ type vpc struct {
 	tfVpc  terraform.Resource
 }
 
-func (v *vpc) Id() string {
-	return v.awsVpc.Id()
+func (v *vpc) ID() string {
+	return v.awsVpc.ID()
 }
 
 func (v *vpc) Type() aws.ResourceType {

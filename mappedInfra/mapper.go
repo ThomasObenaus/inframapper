@@ -29,8 +29,8 @@ func (m *mapperImpl) mapVpcs(vpcs []*aws.Vpc, tf terraform.Infra) []MappedResour
 			continue
 		}
 
-		tfResource := tf.FindById(awsVpc.Id())
-		mapFrom := awsVpc.Id()
+		tfResource := tf.FindByID(awsVpc.ID())
+		mapFrom := awsVpc.ID()
 		mappedToTf := "N/A"
 		if tfResource != nil {
 			mappedToTf = tfResource.Name()
@@ -50,7 +50,7 @@ func (m *mapperImpl) Map(aws aws.Infra, tf terraform.Infra) (Infra, error) {
 }
 
 // LoadAndMap loads all resources of an AWS account and the terraform state that represents the code for this resources.
-// this two infromation are then mapped in order to get a joined view about the linkage between code an realy deployed resources.
+// this two information are then mapped in order to get a joined view about the linkage between code an really deployed resources.
 // The AWS account containing the resources is defined through the given awsProfile and awsRegion.
 // The terraform state to be read in is specified by the stateBackend which can be a remote or a local one.
 func LoadAndMap(awsProfile string, awsRegion string, stateBackend tfstate.StateBackend, tracer trace.Tracer) (Infra, error) {

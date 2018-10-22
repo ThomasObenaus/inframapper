@@ -8,12 +8,12 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
-func TestFindById(t *testing.T) {
+func TestFindByID(t *testing.T) {
 
 	var vpcs []*Vpc
 	vpc := &Vpc{
 		CIDR:  "BLA",
-		VpcId: "blubb",
+		VpcID: "blubb",
 	}
 	vpcs = append(vpcs, vpc)
 
@@ -22,10 +22,10 @@ func TestFindById(t *testing.T) {
 	require.NotNil(t, infra)
 	require.NoError(t, err)
 
-	resource := infra.FindById("ABCD")
+	resource := infra.FindByID("ABCD")
 	assert.Nil(t, resource)
 
-	resource = infra.FindById("blubb")
+	resource = infra.FindByID("blubb")
 	assert.NotNil(t, resource)
 }
 
@@ -34,7 +34,7 @@ func TestFindVpc(t *testing.T) {
 	var vpcs []*Vpc
 	vpc := &Vpc{
 		CIDR:  "BLA",
-		VpcId: "blubb",
+		VpcID: "blubb",
 	}
 	vpcs = append(vpcs, vpc)
 

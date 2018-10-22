@@ -9,13 +9,13 @@ import (
 
 // Vpc represents an AWS VPC
 type Vpc struct {
-	VpcId        string
+	VpcID        string
 	IsDefaultVPC bool
 	CIDR         string
 }
 
-func (vpc Vpc) Id() string {
-	return vpc.VpcId
+func (vpc Vpc) ID() string {
+	return vpc.VpcID
 }
 
 func (vpc Vpc) Type() ResourceType {
@@ -23,7 +23,7 @@ func (vpc Vpc) Type() ResourceType {
 }
 
 func (vpc Vpc) String() string {
-	result := "id=" + vpc.VpcId + ", cidr=" + vpc.CIDR
+	result := "id=" + vpc.VpcID + ", cidr=" + vpc.CIDR
 
 	if vpc.IsDefaultVPC {
 		result += " (default)"
@@ -51,7 +51,7 @@ func LoadVpcs(loader iface.EC2IF, tracer trace.Tracer) ([]*Vpc, error) {
 		}
 
 		vpc := &Vpc{
-			VpcId:        *vpc.VpcId,
+			VpcID:        *vpc.VpcId,
 			IsDefaultVPC: *vpc.IsDefault,
 			CIDR:         *vpc.CidrBlock,
 		}

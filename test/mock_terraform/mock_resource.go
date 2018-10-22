@@ -33,16 +33,16 @@ func (m *MockResource) EXPECT() *MockResourceMockRecorder {
 	return m.recorder
 }
 
-// Id mocks base method
-func (m *MockResource) Id() string {
-	ret := m.ctrl.Call(m, "Id")
+// ID mocks base method
+func (m *MockResource) ID() string {
+	ret := m.ctrl.Call(m, "ID")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// Id indicates an expected call of Id
-func (mr *MockResourceMockRecorder) Id() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Id", reflect.TypeOf((*MockResource)(nil).Id))
+// ID indicates an expected call of ID
+func (mr *MockResourceMockRecorder) ID() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ID", reflect.TypeOf((*MockResource)(nil).ID))
 }
 
 // Name mocks base method

@@ -28,16 +28,16 @@ func TestMap(t *testing.T) {
 	mockTerraformInfraObj := mock_terraform.NewMockInfra(mockCtrl)
 	mockTerraformResourceObj := mock_terraform.NewMockResource(mockCtrl)
 
-	vpcId := "1234"
+	vpcID := "1234"
 	vpcs := make([]*aws.Vpc, 2)
 	vpcs[0] = &aws.Vpc{
-		VpcId:        vpcId,
+		VpcID:        vpcID,
 		IsDefaultVPC: false,
 		CIDR:         "10.100.0.0/16",
 	}
 	mockAwsInfraObj.EXPECT().Vpcs().Return(vpcs)
-	mockTerraformInfraObj.EXPECT().FindById(vpcId).Return(mockTerraformResourceObj)
-	mockTerraformResourceObj.EXPECT().Id().Return(vpcId)
+	mockTerraformInfraObj.EXPECT().FindByID(vpcID).Return(mockTerraformResourceObj)
+	mockTerraformResourceObj.EXPECT().ID().Return(vpcID)
 	mockTerraformResourceObj.EXPECT().Name().Times(2).Return("aws_vpc.bla")
 	mockTerraformResourceObj.EXPECT().Type().Return(terraform.Type_aws_vpc)
 
@@ -46,13 +46,13 @@ func TestMap(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 1, mappedInfra.NumResources())
 
-	res := mappedInfra.AwsResourceById(vpcId)
+	res := mappedInfra.AwsResourceByID(vpcID)
 	require.NotNil(t, res)
 	assert.Equal(t, true, res.HasAws())
-	assert.Equal(t, vpcId, res.Aws().Id())
+	assert.Equal(t, vpcID, res.Aws().ID())
 	assert.Equal(t, aws.Type_VPC, res.Aws().Type())
 	assert.Equal(t, true, res.HasTerraform())
-	assert.Equal(t, vpcId, res.Terraform().Id())
+	assert.Equal(t, vpcID, res.Terraform().ID())
 	assert.Equal(t, "aws_vpc.bla", res.Terraform().Name())
 	assert.Equal(t, terraform.Type_aws_vpc, res.Terraform().Type())
 }
@@ -69,19 +69,19 @@ func TestMapVpc(t *testing.T) {
 	mapper := mapperImpl{tracer: trace.Off()}
 	require.NotNil(t, mapper)
 
-	vpcId := "1234"
+	vpcID := "1234"
 	vpcs := make([]*aws.Vpc, 2)
 	vpcs[0] = &aws.Vpc{
-		VpcId:        vpcId,
+		VpcID:        vpcID,
 		IsDefaultVPC: false,
 		CIDR:         "10.100.0.0/16",
 	}
 
 	mockTerraformInfraObj := mock_terraform.NewMockInfra(mockCtrl)
 	mockTerraformResourceObj := mock_terraform.NewMockResource(mockCtrl)
-	mockTerraformInfraObj.EXPECT().FindById(vpcId).Return(mockTerraformResourceObj)
+	mockTerraformInfraObj.EXPECT().FindByID(vpcID).Return(mockTerraformResourceObj)
 	mockTerraformResourceObj.EXPECT().Name().Times(2).Return("aws_vpc.bla")
-	mockTerraformResourceObj.EXPECT().Id().Return(vpcId)
+	mockTerraformResourceObj.EXPECT().ID().Return(vpcID)
 	mockTerraformResourceObj.EXPECT().Type().Return(terraform.Type_aws_vpc)
 
 	mappedInfraList := mapper.mapVpcs(vpcs, mockTerraformInfraObj)
@@ -92,10 +92,10 @@ func TestMapVpc(t *testing.T) {
 	res := mappedInfraList[0]
 	require.NotNil(t, res)
 	assert.Equal(t, true, res.HasAws())
-	assert.Equal(t, vpcId, res.Aws().Id())
+	assert.Equal(t, vpcID, res.Aws().ID())
 	assert.Equal(t, aws.Type_VPC, res.Aws().Type())
 	assert.Equal(t, true, res.HasTerraform())
-	assert.Equal(t, vpcId, res.Terraform().Id())
+	assert.Equal(t, vpcID, res.Terraform().ID())
 	assert.Equal(t, "aws_vpc.bla", res.Terraform().Name())
 	assert.Equal(t, terraform.Type_aws_vpc, res.Terraform().Type())
 }

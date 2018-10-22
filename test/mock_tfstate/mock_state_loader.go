@@ -47,6 +47,19 @@ func (mr *MockStateLoaderMockRecorder) Load(filename interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Load", reflect.TypeOf((*MockStateLoader)(nil).Load), filename)
 }
 
+// LoadFiles mocks base method
+func (m *MockStateLoader) LoadFiles(files []string) ([]*terraform.State, error) {
+	ret := m.ctrl.Call(m, "LoadFiles", files)
+	ret0, _ := ret[0].([]*terraform.State)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadFiles indicates an expected call of LoadFiles
+func (mr *MockStateLoaderMockRecorder) LoadFiles(files interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadFiles", reflect.TypeOf((*MockStateLoader)(nil).LoadFiles), files)
+}
+
 // LoadRemoteState mocks base method
 func (m *MockStateLoader) LoadRemoteState(remoteCfg tfstate.RemoteConfig) ([]*terraform.State, error) {
 	ret := m.ctrl.Call(m, "LoadRemoteState", remoteCfg)

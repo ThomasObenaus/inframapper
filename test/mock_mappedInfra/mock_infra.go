@@ -57,16 +57,16 @@ func (mr *MockInfraMockRecorder) Resources() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Resources", reflect.TypeOf((*MockInfra)(nil).Resources))
 }
 
-// AwsResourceById mocks base method
-func (m *MockInfra) AwsResourceById(id string) mappedInfra.MappedResource {
-	ret := m.ctrl.Call(m, "AwsResourceById", id)
+// AwsResourceByID mocks base method
+func (m *MockInfra) AwsResourceByID(id string) mappedInfra.MappedResource {
+	ret := m.ctrl.Call(m, "AwsResourceByID", id)
 	ret0, _ := ret[0].(mappedInfra.MappedResource)
 	return ret0
 }
 
-// AwsResourceById indicates an expected call of AwsResourceById
-func (mr *MockInfraMockRecorder) AwsResourceById(id interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AwsResourceById", reflect.TypeOf((*MockInfra)(nil).AwsResourceById), id)
+// AwsResourceByID indicates an expected call of AwsResourceByID
+func (mr *MockInfraMockRecorder) AwsResourceByID(id interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AwsResourceByID", reflect.TypeOf((*MockInfra)(nil).AwsResourceByID), id)
 }
 
 // MappedResources mocks base method

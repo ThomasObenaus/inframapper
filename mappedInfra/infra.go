@@ -20,8 +20,8 @@ type Infra interface {
 	// Resources returns all ressources those that could be mapped and those that could not.
 	Resources() []MappedResource
 
-	// AwsResourceById returns the AWS resource that matches the given id.
-	AwsResourceById(id string) MappedResource
+	// AwsResourceByID returns the AWS resource that matches the given id.
+	AwsResourceByID(id string) MappedResource
 
 	// MappedResources returns all ressources that could be mapped.
 	MappedResources() []MappedResource
@@ -32,7 +32,7 @@ type Infra interface {
 }
 
 type infraImpl struct {
-	awsResourcesById     map[string]MappedResource
+	awsResourcesByID     map[string]MappedResource
 	resources            []MappedResource
 	mappedResources      []MappedResource
 	unMappedAwsResources []MappedResource
@@ -63,8 +63,8 @@ func (in *infraImpl) Resources() []MappedResource {
 	return in.resources
 }
 
-func (in *infraImpl) AwsResourceById(id string) MappedResource {
-	return in.awsResourcesById[id]
+func (in *infraImpl) AwsResourceByID(id string) MappedResource {
+	return in.awsResourcesByID[id]
 }
 
 // NewInfraWithTracer creates an Infra object reflecting the mapping between AWS resources
@@ -77,14 +77,14 @@ func NewInfraWithTracer(resources []MappedResource, tracer trace.Tracer) (Infra,
 	var mappedResources []MappedResource
 	var unMappedAwsResources []MappedResource
 
-	awsResourcesById := make(map[string]MappedResource)
+	awsResourcesByID := make(map[string]MappedResource)
 	for _, mResource := range resources {
 
 		if mResource.IsMapped() {
-			awsResourcesById[mResource.Aws().Id()] = mResource
+			awsResourcesByID[mResource.Aws().ID()] = mResource
 			mappedResources = append(mappedResources, mResource)
 		} else if mResource.HasAws() {
-			awsResourcesById[mResource.Aws().Id()] = mResource
+			awsResourcesByID[mResource.Aws().ID()] = mResource
 			unMappedAwsResources = append(unMappedAwsResources, mResource)
 		} else {
 			tracer.Trace("Ignore resource since it has no aws data: ", mResource.String())
@@ -92,7 +92,7 @@ func NewInfraWithTracer(resources []MappedResource, tracer trace.Tracer) (Infra,
 	}
 
 	return &infraImpl{
-		awsResourcesById:     awsResourcesById,
+		awsResourcesByID:     awsResourcesByID,
 		resources:            resources,
 		mappedResources:      mappedResources,
 		unMappedAwsResources: unMappedAwsResources,

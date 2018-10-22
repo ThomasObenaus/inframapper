@@ -16,10 +16,10 @@ import (
 // read in the resources from an AWS account.
 type Infra interface {
 
-	// FindById returns the AWS resource that matches the given id.
-	FindById(id string) Resource
+	// FindByID returns the AWS resource that matches the given id.
+	FindByID(id string) Resource
 
-	// FindById returns the AWS VPC that matches the given id.
+	// FindByID returns the AWS VPC that matches the given id.
 	FindVpc(id string) *Vpc
 
 	// Vpcs returns all vpc's
@@ -45,7 +45,7 @@ type infraImpl struct {
 	tracer trace.Tracer
 
 	data          *infraData
-	resourcesById map[string]Resource
+	resourcesByID map[string]Resource
 }
 
 func (infra *infraImpl) Region() string {
@@ -63,12 +63,12 @@ func (infra *infraImpl) String() string {
 	return "[" + infra.data.profile + "] " + infra.Region() + ", #resources=" + strconv.Itoa(infra.NumResources())
 }
 
-func (infra *infraImpl) FindById(id string) Resource {
-	return infra.resourcesById[id]
+func (infra *infraImpl) FindByID(id string) Resource {
+	return infra.resourcesByID[id]
 }
 
 func (infra *infraImpl) NumResources() int {
-	return len(infra.resourcesById)
+	return len(infra.resourcesByID)
 }
 
 func (infra *infraImpl) FindVpc(id string) *Vpc {
@@ -77,7 +77,7 @@ func (infra *infraImpl) FindVpc(id string) *Vpc {
 	}
 
 	for _, vpc := range infra.Vpcs() {
-		if vpc != nil && vpc.Id() == id {
+		if vpc != nil && vpc.ID() == id {
 			return vpc
 		}
 	}
@@ -103,7 +103,7 @@ func newInfraWithTracer(data *infraData, tracer trace.Tracer) (Infra, error) {
 		tracer = trace.Off()
 	}
 
-	resourcesById, err := createResourcesByIdMap(data, tracer)
+	resourcesByID, err := createResourcesByIDMap(data, tracer)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func newInfraWithTracer(data *infraData, tracer trace.Tracer) (Infra, error) {
 	return &infraImpl{
 		tracer:        tracer,
 		data:          data,
-		resourcesById: resourcesById,
+		resourcesByID: resourcesByID,
 	}, nil
 
 }
@@ -120,7 +120,7 @@ func newInfra(data *infraData) (Infra, error) {
 	return newInfraWithTracer(data, nil)
 }
 
-func createResourcesByIdMap(data *infraData, tracer trace.Tracer) (map[string]Resource, error) {
+func createResourcesByIDMap(data *infraData, tracer trace.Tracer) (map[string]Resource, error) {
 
 	var empty = make(map[string]Resource)
 
@@ -134,7 +134,7 @@ func createResourcesByIdMap(data *infraData, tracer trace.Tracer) (map[string]Re
 		if vpc == nil {
 			continue
 		}
-		result[vpc.Id()] = vpc
+		result[vpc.ID()] = vpc
 	}
 
 	// TODO add mapping for more resources here

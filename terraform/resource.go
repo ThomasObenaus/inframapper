@@ -5,7 +5,7 @@ import "strconv"
 // Resource represents a resource that was described in terraform.
 type Resource interface {
 	// Id returns the id of the real resource (i.e. an AWS ID like 'vpc-f8168d93')
-	Id() string
+	ID() string
 
 	// Name returns the name of the resource that is used in terraform code (i.e. 'aws_vpc.vpc_main')
 	Name() string
@@ -30,7 +30,7 @@ type resourceImpl struct {
 	provider  string
 }
 
-func (r *resourceImpl) Id() string {
+func (r *resourceImpl) ID() string {
 	return r.id
 }
 
@@ -51,5 +51,5 @@ func (r *resourceImpl) Provider() string {
 }
 
 func (r *resourceImpl) String() string {
-	return "[" + r.Type().String() + "] id=" + r.Id() + ",n=" + r.Name() + ",#deps=" + strconv.Itoa(len(r.Dependencies()))
+	return "[" + r.Type().String() + "] id=" + r.ID() + ",n=" + r.Name() + ",#deps=" + strconv.Itoa(len(r.Dependencies()))
 }

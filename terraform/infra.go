@@ -16,8 +16,8 @@ import (
 // Based on the read terraform state the Infra can be created via
 // NewInfraWithTracer() or NewInfra()
 type Infra interface {
-	// FindById returns the resource that matches the given id string (i.e. 'vpc-f8168d93')
-	FindById(id string) Resource
+	// FindByID returns the resource that matches the given id string (i.e. 'vpc-f8168d93')
+	FindByID(id string) Resource
 
 	// FindByName returns the resource that matches the given name as it is used in terraform code (i.e 'aws_vpc.vpc_main')
 	FindByName(name string) Resource
@@ -29,7 +29,7 @@ type Infra interface {
 
 type infraImpl struct {
 	tracer          trace.Tracer
-	resourcesById   map[string]Resource
+	resourcesByID   map[string]Resource
 	resourcesByName map[string]Resource
 }
 
@@ -41,8 +41,8 @@ func (infra *infraImpl) String() string {
 	return "#resources=" + strconv.Itoa(infra.NumResources())
 }
 
-func (infra *infraImpl) FindById(id string) Resource {
-	return infra.resourcesById[id]
+func (infra *infraImpl) FindByID(id string) Resource {
+	return infra.resourcesByID[id]
 }
 
 func (infra *infraImpl) FindByName(name string) Resource {
@@ -61,15 +61,15 @@ func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 		tracer = trace.Off()
 	}
 
-	resourcesById := make(map[string]Resource)
+	resourcesByID := make(map[string]Resource)
 	resourcesByName := make(map[string]Resource)
 
 	for _, tfState := range data {
-		rById, err := createResourcesByIdMap(tfState, tracer)
+		rByID, err := createResourcesByIDMap(tfState, tracer)
 		if err != nil {
 			tracer.Trace("Error creating resourceByIdMap. Will skip. Err: ", err.Error())
 		} else {
-			resourcesById = mergeResourceMaps(resourcesById, rById)
+			resourcesByID = mergeResourceMaps(resourcesByID, rByID)
 		}
 
 		rByName, err := createResourcesByNameMap(tfState, tracer)
@@ -82,7 +82,7 @@ func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 
 	return &infraImpl{
 		tracer:          tracer,
-		resourcesById:   resourcesById,
+		resourcesByID:   resourcesByID,
 		resourcesByName: resourcesByName,
 	}, nil
 
@@ -98,8 +98,8 @@ func NewInfra(data []*tf.State) (Infra, error) {
 type filterCriteria int
 
 const (
-	filterCriteria_Id filterCriteria = iota
-	filterCriteria_Name
+	filterCriteriaID filterCriteria = iota
+	filterCriteriaName
 )
 
 func createResourcesByXMap(data *tf.State, fCrit filterCriteria, tracer trace.Tracer) (map[string]Resource, error) {
@@ -137,8 +137,8 @@ func createResourcesByXMap(data *tf.State, fCrit filterCriteria, tracer trace.Tr
 			}
 
 			key := name
-			if fCrit == filterCriteria_Id {
-				key = r.Id()
+			if fCrit == filterCriteriaID {
+				key = r.ID()
 			}
 
 			tracer.Trace("Add resource ", r.String())
@@ -150,11 +150,11 @@ func createResourcesByXMap(data *tf.State, fCrit filterCriteria, tracer trace.Tr
 }
 
 func createResourcesByNameMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
-	return createResourcesByXMap(data, filterCriteria_Name, tracer)
+	return createResourcesByXMap(data, filterCriteriaName, tracer)
 }
 
-func createResourcesByIdMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
-	return createResourcesByXMap(data, filterCriteria_Id, tracer)
+func createResourcesByIDMap(data *tf.State, tracer trace.Tracer) (map[string]Resource, error) {
+	return createResourcesByXMap(data, filterCriteriaID, tracer)
 }
 
 func mergeResourceMaps(map1 map[string]Resource, map2 map[string]Resource) map[string]Resource {

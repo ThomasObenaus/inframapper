@@ -59,8 +59,8 @@ func TestLoadVPCSuccess(t *testing.T) {
 	require.NotNil(t, vpcs)
 	require.NotEmpty(t, vpcs)
 	require.Len(t, vpcs, 2)
-	assert.Equal(t, "12345", vpcs[0].VpcId)
-	assert.Equal(t, "67890", vpcs[1].VpcId)
+	assert.Equal(t, "12345", vpcs[0].VpcID)
+	assert.Equal(t, "67890", vpcs[1].VpcID)
 }
 
 func ExampleLoadVpcs() {
