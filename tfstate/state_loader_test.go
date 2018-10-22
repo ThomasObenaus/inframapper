@@ -138,7 +138,7 @@ func TestSMLoadRemoteFailParse(t *testing.T) {
 	assert.Empty(t, stateList)
 }
 
-func ExampleLoadRemoteState() {
+func ExampleStateLoader_LoadRemoteState() {
 	sLoader := NewStateLoader()
 	if sLoader == nil {
 		log.Fatalf("Error, creating state-loader\n")
