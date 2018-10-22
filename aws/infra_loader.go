@@ -8,6 +8,7 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// InfraLoader is a simple interface for loading AWS resources
 type InfraLoader interface {
 	Load() (Infra, error)
 }

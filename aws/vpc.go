@@ -7,14 +7,11 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// Vpc represents an AWS VPC
 type Vpc struct {
 	VpcId        string
 	IsDefaultVPC bool
 	CIDR         string
-}
-
-type VpcLoader interface {
-	DescribeVpcs(input *ec2.DescribeVpcsInput) (*ec2.DescribeVpcsOutput, error)
 }
 
 func (vpc Vpc) Id() string {
@@ -35,6 +32,7 @@ func (vpc Vpc) String() string {
 	return result
 }
 
+// LoadVpcs is a method used to load vpc information from AWS
 func LoadVpcs(loader iface.EC2IF, tracer trace.Tracer) ([]*Vpc, error) {
 	inDesc := &ec2.DescribeVpcsInput{DryRun: helper.NewFalse()}
 	outDesc, err := loader.DescribeVpcs(inDesc)
