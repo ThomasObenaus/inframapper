@@ -4,9 +4,9 @@ package terraform
 
 import "strconv"
 
-const _ResourceType_name = "Type_unkownType_aws_vpc"
+const _ResourceType_name = "Type_unknownType_aws_vpc"
 
-var _ResourceType_index = [...]uint8{0, 11, 23}
+var _ResourceType_index = [...]uint8{0, 12, 24}
 
 func (i ResourceType) String() string {
 	if i < 0 || i >= ResourceType(len(_ResourceType_index)-1) {

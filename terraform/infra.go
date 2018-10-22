@@ -88,7 +88,7 @@ func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 
 }
 
-// NewInfraWith creates a Infra object based on the given terraform state.
+// NewInfra creates a Infra object based on the given terraform state.
 // The state can be read in using the tfstate.StateLoader.
 func NewInfra(data []*tf.State) (Infra, error) {
 	return NewInfraWithTracer(data, nil)

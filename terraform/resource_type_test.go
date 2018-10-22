@@ -8,7 +8,7 @@ import (
 
 func TestStrToType(t *testing.T) {
 	ty := StrToType("?")
-	assert.Equal(t, Type_unkown, ty)
+	assert.Equal(t, Type_unknown, ty)
 
 	ty = StrToType("aws_vpc")
 	assert.Equal(t, Type_aws_vpc, ty)
