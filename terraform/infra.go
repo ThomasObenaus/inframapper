@@ -1,3 +1,4 @@
+// Contains code representing and for interacting with resources that are described by terraform code.
 package terraform
 
 import (
@@ -8,9 +9,20 @@ import (
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
+// Infra is an interface providing access to all resources
+// that where described by terraform code.
+// To obtain a Infra object you have to obtain the terraform state
+// using the tfstate.StateLoader first.
+// Based on the read terraform state the Infra can be created via
+// NewInfraWithTracer() or NewInfra()
 type Infra interface {
+	// FindById returns the resource that matches the given id string (i.e. 'vpc-f8168d93')
 	FindById(id string) Resource
-	FindByName(id string) Resource
+
+	// FindByName returns the resource that matches the given name as it is used in terraform code (i.e 'aws_vpc.vpc_main')
+	FindByName(name string) Resource
+
+	// NumResources returns the number of resources known.
 	NumResources() int
 	String() string
 }
@@ -37,6 +49,8 @@ func (infra *infraImpl) FindByName(name string) Resource {
 	return infra.resourcesByName[name]
 }
 
+// NewInfraWithTracer creates a Infra object based on the given terraform state.
+// The state can be read in using the tfstate.StateLoader.
 func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 
 	if data == nil {
@@ -74,6 +88,8 @@ func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 
 }
 
+// NewInfraWith creates a Infra object based on the given terraform state.
+// The state can be read in using the tfstate.StateLoader.
 func NewInfra(data []*tf.State) (Infra, error) {
 	return NewInfraWithTracer(data, nil)
 }
