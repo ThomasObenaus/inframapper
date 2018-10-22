@@ -22,7 +22,7 @@ type StateLoader interface {
 	Load(filename string) (*terraform.State, error)
 
 	// LoadRemoteState loads state from an aws S3 bucket
-	LoadRemoteState(remoteCfg iface.RemoteConfig) ([]*terraform.State, error)
+	LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error)
 }
 
 type tfStateLoader struct {
@@ -36,7 +36,7 @@ func (sl *tfStateLoader) Validate() error {
 	return nil
 }
 
-func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg iface.RemoteConfig, downloader iface.S3DownloaderAPI) ([]*terraform.State, error) {
+func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg RemoteConfig, downloader iface.S3DownloaderAPI) ([]*terraform.State, error) {
 
 	tfStateList := make([]*terraform.State, 0)
 
@@ -67,7 +67,7 @@ func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg iface.RemoteConfig, downl
 	return tfStateList, nil
 
 }
-func (sl *tfStateLoader) LoadRemoteState(remoteCfg iface.RemoteConfig) ([]*terraform.State, error) {
+func (sl *tfStateLoader) LoadRemoteState(remoteCfg RemoteConfig) ([]*terraform.State, error) {
 
 	emptyList := make([]*terraform.State, 0)
 

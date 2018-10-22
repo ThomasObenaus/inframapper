@@ -8,7 +8,6 @@ import (
 	"github.com/thomasobenaus/inframapper/mappedInfra"
 	"github.com/thomasobenaus/inframapper/terraform"
 	"github.com/thomasobenaus/inframapper/tfstate"
-	tfstateIf "github.com/thomasobenaus/inframapper/tfstate/iface"
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
@@ -38,7 +37,7 @@ func main() {
 	keys := make([]string, 2)
 	keys[0] = "snapshot/base/networking/terraform.tfstate"
 	keys[1] = "snapshot/base/common/terraform.tfstate"
-	remoteCfg := tfstateIf.RemoteConfig{
+	remoteCfg := tfstate.RemoteConfig{
 		BucketName: "741125603121-tfstate",
 		Keys:       keys,
 		Profile:    "shared",

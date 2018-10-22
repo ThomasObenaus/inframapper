@@ -7,7 +7,7 @@ package mock_tfstate
 import (
 	gomock "github.com/golang/mock/gomock"
 	terraform "github.com/hashicorp/terraform/terraform"
-	iface "github.com/thomasobenaus/inframapper/tfstate/iface"
+	tfstate "github.com/thomasobenaus/inframapper/tfstate"
 	reflect "reflect"
 )
 
@@ -48,7 +48,7 @@ func (mr *MockStateLoaderMockRecorder) Load(filename interface{}) *gomock.Call {
 }
 
 // LoadRemoteState mocks base method
-func (m *MockStateLoader) LoadRemoteState(remoteCfg iface.RemoteConfig) ([]*terraform.State, error) {
+func (m *MockStateLoader) LoadRemoteState(remoteCfg tfstate.RemoteConfig) ([]*terraform.State, error) {
 	ret := m.ctrl.Call(m, "LoadRemoteState", remoteCfg)
 	ret0, _ := ret[0].([]*terraform.State)
 	ret1, _ := ret[1].(error)

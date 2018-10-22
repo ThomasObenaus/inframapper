@@ -7,6 +7,7 @@ import (
 	terraform "github.com/hashicorp/terraform/terraform"
 )
 
+// Parse unmarshals the given binary array into terraform state structure.
 func Parse(data []byte) (*terraform.State, error) {
 
 	state := &terraform.State{}

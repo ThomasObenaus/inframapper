@@ -14,7 +14,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/thomasobenaus/inframapper/test/mock_tfstate_iface"
-	"github.com/thomasobenaus/inframapper/tfstate/iface"
 	"github.com/thomasobenaus/inframapper/trace"
 )
 
@@ -72,7 +71,7 @@ func TestSMLoadRemoteSuccess(t *testing.T) {
 
 	keys := []string{"f1", "f2", "f3"}
 
-	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
+	remoteCfg := RemoteConfig{BucketName: "foo", Keys: keys}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -98,7 +97,7 @@ func TestSMLoadRemoteFailNoData(t *testing.T) {
 
 	keys := []string{"f1"}
 
-	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
+	remoteCfg := RemoteConfig{BucketName: "foo", Keys: keys}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -117,7 +116,7 @@ func TestSMLoadRemoteFailParse(t *testing.T) {
 
 	keys := []string{"f1"}
 
-	remoteCfg := iface.RemoteConfig{BucketName: "foo", Keys: keys}
+	remoteCfg := RemoteConfig{BucketName: "foo", Keys: keys}
 
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -147,7 +146,7 @@ func ExampleLoadRemoteState() {
 
 	keys := []string{"prod/stack1/terraform.state", "prod/stack2/terraform.state"}
 
-	remoteCfg := iface.RemoteConfig{
+	remoteCfg := RemoteConfig{
 		BucketName: "nameOfStateBucket",
 		Region:     "regionOfTheStateBucket",
 		Profile:    "profileGrantingAccessToStateBucket",

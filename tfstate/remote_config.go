@@ -1,4 +1,4 @@
-package iface
+package tfstate
 
 // RemoteConfig configuratipon for the remote storage (S3) for terrafrom state
 type RemoteConfig struct {
