@@ -64,7 +64,7 @@ func (t *tracer) Warn(a ...interface{}) {
 }
 
 func (t *tracer) Error(a ...interface{}) {
-	fmt.Fprint(t.out, "|erro|")
+	fmt.Fprint(t.out, "|erro| ")
 	fmt.Fprint(t.out, a...)
 	fmt.Fprintln(t.out)
 }
