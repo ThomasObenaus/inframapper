@@ -23,12 +23,12 @@ type infraLoaderImpl struct {
 
 func (sl *infraLoaderImpl) Load() (Infra, error) {
 	// VPC - section
-	sl.tracer.Trace("Load vpcs ...")
+	sl.tracer.Info("Load vpcs ...")
 	vpcs, err := LoadVpcs(sl.ec2IF, sl.tracer)
 	if err != nil {
-		sl.tracer.Trace("Error loading vpcs: ", err.Error())
+		sl.tracer.Error("Error loading vpcs: ", err.Error())
 	}
-	sl.tracer.Trace("Load vpcs (", len(vpcs), ")...done")
+	sl.tracer.Info("Load vpcs (", len(vpcs), ") ... done")
 
 	// put the data together
 	infraData := &infraData{

@@ -13,7 +13,7 @@ func main() {
 
 	profile := "develop"
 	region := "eu-central-1"
-	tracer := trace.New(os.Stdout)
+	tracer := trace.NewInfo(os.Stdout)
 
 	keys := make([]string, 2)
 	keys[0] = "snapshot/base/networking/terraform.tfstate"
@@ -39,10 +39,10 @@ func main() {
 		unMappedAwsResStr += "\t" + res.String() + "\n"
 	}
 
-	tracer.Trace("Mapped Infra: ", mappedInfra)
-	tracer.Trace("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
-	tracer.Trace(mappedResStr)
-	tracer.Trace("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
-	tracer.Trace(unMappedAwsResStr)
+	tracer.Info("Mapped Infra: ", mappedInfra)
+	tracer.Info("Mapped Resources [", len(mappedInfra.MappedResources()), "]:")
+	tracer.Info(mappedResStr)
+	tracer.Info("UnMapped AWS Resources [", len(mappedInfra.UnMappedAwsResources()), "]:")
+	tracer.Info(unMappedAwsResStr)
 
 }

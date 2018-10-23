@@ -48,7 +48,7 @@ func LoadVpcs(loader iface.EC2IF, tracer trace.Tracer) ([]*Vpc, error) {
 	for _, vpc := range outDesc.Vpcs {
 
 		if vpc == nil {
-			tracer.Trace("Got nil vpc, ignore it.")
+			tracer.Warn("Got nil vpc, ignore it.")
 			continue
 		}
 

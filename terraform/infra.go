@@ -64,20 +64,26 @@ func NewInfraWithTracer(data []*tf.State, tracer trace.Tracer) (Infra, error) {
 	resourcesByID := make(map[string]Resource)
 	resourcesByName := make(map[string]Resource)
 
-	for _, tfState := range data {
+	numStateObjects := len(data)
+	for idx, tfState := range data {
+
+		tracer.Info("Processing state object ", (idx + 1), "/", numStateObjects, " ...")
+
 		rByID, err := createResourcesByIDMap(tfState, tracer)
 		if err != nil {
-			tracer.Trace("Error creating resourceByIdMap. Will skip. Err: ", err.Error())
+			tracer.Warn("Error creating resourceByIdMap. Will skip. Err: ", err.Error())
 		} else {
 			resourcesByID = mergeResourceMaps(resourcesByID, rByID)
 		}
 
 		rByName, err := createResourcesByNameMap(tfState, tracer)
 		if err != nil {
-			tracer.Trace("Error creating resourceByNameMap. Will skip. Err: ", err.Error())
+			tracer.Warn("Error creating resourceByNameMap. Will skip. Err: ", err.Error())
 		} else {
 			resourcesByName = mergeResourceMaps(resourcesByName, rByName)
 		}
+
+		tracer.Info("Processing state object ", (idx + 1), "/", numStateObjects, " ... done")
 	}
 
 	return &infraImpl{
@@ -111,17 +117,17 @@ func createResourcesByXMap(data *tf.State, fCrit filterCriteria, tracer trace.Tr
 
 	numModules := len(data.Modules)
 	if numModules == 0 {
-		tracer.Trace("No modules given")
+		tracer.Warn("No modules given")
 		return empty, nil
 	}
-	tracer.Trace("#Modules=", strconv.Itoa(numModules))
+	tracer.Info("#Modules=", strconv.Itoa(numModules))
 
 	var result = make(map[string]Resource)
 	// all modules
 	for idx, module := range data.Modules {
 		resources := module.Resources
 		if len(resources) == 0 {
-			tracer.Trace("No resources given for module ", idx, "/", numModules)
+			tracer.Warn("No resources given for module ", idx, "/", numModules)
 			continue
 		}
 

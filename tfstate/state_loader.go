@@ -47,7 +47,7 @@ func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg RemoteConfig, downloader 
 		var buffer []byte
 		wBuffer := aws.NewWriteAtBuffer(buffer)
 		stateFile := remoteCfg.BucketName + "/" + key
-		sl.tracer.Trace("Loading ", stateFile, "...")
+		sl.tracer.Info("Loading ", stateFile, "...")
 
 		// Write the contents of S3 Object to the buffer
 		nBytes, err := downloader.Download(wBuffer, &s3.GetObjectInput{
@@ -58,7 +58,7 @@ func (sl *tfStateLoader) loadRemoteStateImpl(remoteCfg RemoteConfig, downloader 
 		if err != nil {
 			return nil, fmt.Errorf("Failed to download state-file '%s', %v", stateFile, err)
 		}
-		sl.tracer.Trace("Loading ", stateFile, " ", nBytes, " B...done")
+		sl.tracer.Info("Loading ", stateFile, " ", nBytes, " B...done")
 
 		tfState, err := Parse(wBuffer.Bytes())
 		if err != nil {
@@ -110,7 +110,7 @@ func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
 		return nil, err
 	}
 
-	sl.tracer.Trace("Loading tfstate from '", filename, "'...")
+	sl.tracer.Info("Loading tfstate from '", filename, "'...")
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, fmt.Errorf("Error reading file %s: %s", filename, err.Error())
@@ -120,7 +120,7 @@ func (sl *tfStateLoader) Load(filename string) (*terraform.State, error) {
 	tfstate, err := Parse(data)
 	sl.tracer.Trace("Parse state...done")
 
-	sl.tracer.Trace("Loading tfstate from '", filename, "'...done")
+	sl.tracer.Info("Loading tfstate from '", filename, "'...done")
 	return tfstate, err
 }
 

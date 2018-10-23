@@ -22,10 +22,10 @@ func (m *mapperImpl) String() string {
 func (m *mapperImpl) mapVpcs(vpcs []*aws.Vpc, tf terraform.Infra) []MappedResource {
 	var mappedResources []MappedResource
 	// handle vpcs
-	m.tracer.Trace("Map (", len(vpcs), ") vpcs:")
+	m.tracer.Info("Map (", len(vpcs), ") vpcs")
 	for _, awsVpc := range vpcs {
 		if awsVpc == nil {
-			m.tracer.Trace("Ignore vpc which is nil")
+			m.tracer.Warn("Ignore vpc which is nil")
 			continue
 		}
 
@@ -60,7 +60,7 @@ func LoadAndMap(awsProfile string, awsRegion string, stateBackend tfstate.StateB
 	}
 
 	// Step 1: Load the AWS infra
-	tracer.Trace("Step 1: Loading AWS Infra ...")
+	tracer.Info("Step 1: Loading AWS Infra ...")
 	awsInfraLoader, err := aws.NewInfraLoaderWithTracer(awsProfile, awsRegion, tracer)
 	if err != nil {
 		return nil, fmt.Errorf("Error loading AWS infra: %s", err.Error())
@@ -70,10 +70,10 @@ func LoadAndMap(awsProfile string, awsRegion string, stateBackend tfstate.StateB
 	if err != nil {
 		return nil, fmt.Errorf("Error loading AWS infra: %s", err.Error())
 	}
-	tracer.Trace("Step 1: Loading AWS Infra ... done")
+	tracer.Info("Step 1: Loading AWS Infra ... done\n")
 
 	// Step 2a: Load the terraform state for the infra
-	tracer.Trace("\n\nStep 2a: Loading Terraform state ...")
+	tracer.Info("Step 2a: Loading Terraform state ...")
 	tfStateLoader := tfstate.NewStateLoaderWithTracer(tracer)
 
 	var tfStateList []*hc_terraform.State
@@ -89,24 +89,24 @@ func LoadAndMap(awsProfile string, awsRegion string, stateBackend tfstate.StateB
 		}
 	}
 
-	tracer.Trace("Step 2a: Loading Terraform state ... done")
+	tracer.Info("Step 2a: Loading Terraform state ... done\n")
 
 	// Step 2b: Create terraform infra representation based on the loaded state.
-	tracer.Trace("\n\nStep 2a: Step 2b: Create terraform infra representation based on the loaded state ...")
+	tracer.Info("Step 2a: Step 2b: Create terraform infra representation based on the loaded state ...")
 	tfInfra, err := terraform.NewInfraWithTracer(tfStateList, tracer)
 	if err != nil {
 		return nil, fmt.Errorf("Error creatin terraform infra: %s", err.Error())
 	}
-	tracer.Trace("\n\nStep 2a: Step 2b: Create terraform infra representation based on the loaded state ... done")
+	tracer.Info("Step 2a: Step 2b: Create terraform infra representation based on the loaded state ... done\n")
 
 	// Step 3: Map terraform state and aws infra
-	tracer.Trace("\n\nStep 3: Map terraform state and aws infra ...")
+	tracer.Info("Step 3: Map terraform state and aws infra ...")
 	mapper := NewMapperWithTracer(tracer)
 	mappedInfra, err := mapper.Map(awsInfra, tfInfra)
 	if err != nil {
 		return nil, fmt.Errorf("Error mapping infra: %s", err.Error())
 	}
-	tracer.Trace("\n\nStep 3: Map terraform state and aws infra ... done")
+	tracer.Info("Step 3: Map terraform state and aws infra ... done\n")
 
 	return mappedInfra, nil
 }

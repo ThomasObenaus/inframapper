@@ -86,7 +86,7 @@ func (infra *infraImpl) FindVpc(id string) *Vpc {
 
 func (infra *infraImpl) Vpcs() []*Vpc {
 	if infra.data == nil {
-		infra.tracer.Trace("Error: infra.data is nil, return nil.")
+		infra.tracer.Error("Error: infra.data is nil, return nil.")
 		return nil
 	}
 
