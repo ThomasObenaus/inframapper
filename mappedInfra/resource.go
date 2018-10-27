@@ -1,6 +1,8 @@
 package mappedInfra
 
 import (
+	"fmt"
+
 	"github.com/thomasobenaus/inframapper/aws"
 	"github.com/thomasobenaus/inframapper/terraform"
 )
@@ -27,4 +29,13 @@ type MappedResource interface {
 	// ResourceType returns the type of this resource (i.e. Vpc)
 	ResourceType() ResourceType
 	String() string
+}
+
+// ToVpc casts the given resourc into a Vpc (if possible)
+func ToVpc(r MappedResource) (*Vpc, error) {
+	if r.ResourceType() != TypeVPC {
+		return nil, fmt.Errorf("Not of type Vpc")
+	}
+
+	return r.(*Vpc), nil
 }
