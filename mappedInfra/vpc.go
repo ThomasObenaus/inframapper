@@ -5,20 +5,20 @@ import (
 	"github.com/thomasobenaus/inframapper/terraform"
 )
 
-type vpc struct {
+type Vpc struct {
 	awsVpc *aws.Vpc
 	tfVpc  terraform.Resource
 }
 
-func (v *vpc) ID() string {
+func (v *Vpc) ID() string {
 	return v.awsVpc.ID()
 }
 
-func (v *vpc) Type() aws.ResourceType {
+func (v *Vpc) Type() aws.ResourceType {
 	return v.awsVpc.Type()
 }
 
-func (v *vpc) String() string {
+func (v *Vpc) String() string {
 	tfStateStr := "no tf-state"
 	if v.HasTerraform() {
 		tfStateStr = v.Terraform().Name()
@@ -26,31 +26,31 @@ func (v *vpc) String() string {
 	return "[" + tfStateStr + "] " + v.awsVpc.String()
 }
 
-func (v *vpc) Aws() aws.Resource {
+func (v *Vpc) Aws() aws.Resource {
 	return v.awsVpc
 }
 
-func (v *vpc) IsMapped() bool {
+func (v *Vpc) IsMapped() bool {
 	return v.HasTerraform() && v.HasAws()
 }
 
-func (v *vpc) HasAws() bool {
+func (v *Vpc) HasAws() bool {
 	return v.awsVpc != nil
 }
 
-func (v *vpc) HasTerraform() bool {
+func (v *Vpc) HasTerraform() bool {
 	return v.tfVpc != nil
 }
 
-func (v *vpc) Terraform() terraform.Resource {
+func (v *Vpc) Terraform() terraform.Resource {
 	return v.tfVpc
 }
 
-func (v *vpc) ResourceType() ResourceType {
+func (v *Vpc) ResourceType() ResourceType {
 	return TypeVPC
 }
 
-// NewVpc creates a mapping between an AWS vpc and the according terraform resource.
+// NewVpc creates a mapping between an AWS Vpc and the according terraform resource.
 func NewVpc(awsVpc *aws.Vpc, tfVpc terraform.Resource) MappedResource {
-	return &vpc{awsVpc: awsVpc, tfVpc: tfVpc}
+	return &Vpc{awsVpc: awsVpc, tfVpc: tfVpc}
 }
