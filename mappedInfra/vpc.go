@@ -6,16 +6,16 @@ import (
 )
 
 type Vpc struct {
-	awsVpc *aws.Vpc
-	tfVpc  terraform.Resource
+	AwsVpc *aws.Vpc
+	TfVpc  terraform.Resource
 }
 
 func (v *Vpc) ID() string {
-	return v.awsVpc.ID()
+	return v.AwsVpc.ID()
 }
 
 func (v *Vpc) Type() aws.ResourceType {
-	return v.awsVpc.Type()
+	return v.AwsVpc.Type()
 }
 
 func (v *Vpc) String() string {
@@ -23,11 +23,11 @@ func (v *Vpc) String() string {
 	if v.HasTerraform() {
 		tfStateStr = v.Terraform().Name()
 	}
-	return "[" + tfStateStr + "] " + v.awsVpc.String()
+	return "[" + tfStateStr + "] " + v.AwsVpc.String()
 }
 
 func (v *Vpc) Aws() aws.Resource {
-	return v.awsVpc
+	return v.AwsVpc
 }
 
 func (v *Vpc) IsMapped() bool {
@@ -35,15 +35,15 @@ func (v *Vpc) IsMapped() bool {
 }
 
 func (v *Vpc) HasAws() bool {
-	return v.awsVpc != nil
+	return v.AwsVpc != nil
 }
 
 func (v *Vpc) HasTerraform() bool {
-	return v.tfVpc != nil
+	return v.TfVpc != nil
 }
 
 func (v *Vpc) Terraform() terraform.Resource {
-	return v.tfVpc
+	return v.TfVpc
 }
 
 func (v *Vpc) ResourceType() ResourceType {
@@ -51,6 +51,6 @@ func (v *Vpc) ResourceType() ResourceType {
 }
 
 // NewVpc creates a mapping between an AWS Vpc and the according terraform resource.
-func NewVpc(awsVpc *aws.Vpc, tfVpc terraform.Resource) MappedResource {
-	return &Vpc{awsVpc: awsVpc, tfVpc: tfVpc}
+func NewVpc(AwsVpc *aws.Vpc, tfVpc terraform.Resource) MappedResource {
+	return &Vpc{AwsVpc: AwsVpc, TfVpc: tfVpc}
 }
