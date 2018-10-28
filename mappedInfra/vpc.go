@@ -1,6 +1,8 @@
 package mappedInfra
 
 import (
+	"fmt"
+
 	"github.com/thomasobenaus/inframapper/aws"
 	"github.com/thomasobenaus/inframapper/terraform"
 )
@@ -48,6 +50,15 @@ func (v *Vpc) Terraform() terraform.Resource {
 
 func (v *Vpc) ResourceType() ResourceType {
 	return TypeVPC
+}
+
+// ToVpc casts the given resourc into a Vpc (if possible)
+func ToVpc(r MappedResource) (*Vpc, error) {
+	if r.ResourceType() != TypeVPC {
+		return nil, fmt.Errorf("Not of type Vpc")
+	}
+
+	return r.(*Vpc), nil
 }
 
 // NewVpc creates a mapping between an AWS Vpc and the according terraform resource.

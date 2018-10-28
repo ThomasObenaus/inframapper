@@ -63,6 +63,31 @@ func TestLoadVPCSuccess(t *testing.T) {
 	assert.Equal(t, "67890", vpcs[1].VpcID)
 }
 
+func TestFindNameTag(t *testing.T) {
+	tags := make([]*ec2.Tag, 0)
+	nameTag := FindNameTag(tags, "Not Found")
+	assert.Equal(t, "Not Found", nameTag)
+
+	// tag.key == nil
+	tag := &ec2.Tag{}
+	tags = append(tags, tag)
+	nameTag = FindNameTag(tags, "Not Found")
+	assert.Equal(t, "Not Found", nameTag)
+
+	// tag.value == nil
+	tagKey := "Name"
+	tag = &ec2.Tag{Key: &tagKey}
+	tags = append(tags, tag)
+	nameTag = FindNameTag(tags, "Not Found")
+	assert.Equal(t, "Not Found", nameTag)
+
+	tagValue := "Test"
+	tag = &ec2.Tag{Key: &tagKey, Value: &tagValue}
+	tags = append(tags, tag)
+	nameTag = FindNameTag(tags, "Not Found")
+	assert.Equal(t, "Test", nameTag)
+}
+
 func ExampleLoadVpcs() {
 
 	tracer := trace.Off()
